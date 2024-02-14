@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "804023003250",
+    "project_id": "dish-dive",
+    "storage_bucket": "dish-dive.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804023003250:android:bffe7495779cba90e3baeb",
+        "android_client_info": {
+          "package_name": "com.example.dishdive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfYjN1-X3Jel7SG1Z45fgKDuJsV2JNIfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

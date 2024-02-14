@@ -1,0 +1,30 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="Base.Theme.DishDive" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/accent</item>
+        <item name="colorOnPrimary">@color/secondary</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:navigationBarColor">#F52C56</item>
+
+    </style>
+
+    <style name="Theme.DishDive" parent="Base.Theme.DishDive" />
+
+    <!-- Style for the splash screen, inherits from the base theme -->
+    <style name="Theme.Splash" parent="Base.Theme.DishDive">
+        <!-- Hide the action bar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="roundedImageStyle" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50dp</item>
+    </style>
+
+    <style name="RoundedCornersDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_background</item>
+    </style>
+
+</resources>

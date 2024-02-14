@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.dishdive.home.view.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_detailsMealFragment"
+            app:destination="@id/detailsMealFragment"
+
+            />
+
+    </fragment>
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.example.dishdive.favouritemeal.view.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite">
+        <action
+            android:id="@+id/action_favouriteFragment_to_detailsMealFragment"
+            app:destination="@id/detailsMealFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/planFragment"
+        android:name="com.example.dishdive.plan.view.PlanFragment"
+        android:label="fragment_plan"
+        tools:layout="@layout/fragment_plan">
+        <action
+            android:id="@+id/action_planFragment_to_detailsMealFragment"
+            app:destination="@id/detailsMealFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.dishdive.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+    </fragment>
+    <fragment
+        android:id="@+id/detailsMealFragment"
+        android:name="com.example.dishdive.mealdetails.view.DetailsMealFragment"
+        tools:layout="@layout/fragment_details_meal">
+        <action
+            android:id="@+id/action_detailsMealFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <argument
+            android:name="MealID"
+            app:argType="string" />
+        <argument
+            android:name="MealName"
+            app:argType="string" />
+        <argument
+            android:name="MealThumb"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_detailsMealFragment_to_planFragment"
+            app:destination="@id/planFragment" />
+        <action
+            android:id="@+id/action_detailsMealFragment_to_favouriteFragment"
+            app:destination="@id/favouriteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.dishdive.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+
+    </fragment>
+
+</navigation>
