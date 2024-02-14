@@ -15,6 +15,9 @@
             app:destination="@id/detailsMealFragment"
 
             />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
 
     </fragment>
     <fragment
@@ -66,10 +69,28 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.dishdive.SearchFragment"
+        android:name="com.example.dishdive.search.view.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
 
+        <action
+            android:id="@+id/action_searchFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <argument
+            android:name="MealID"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_searchFragment_to_categoryMealsFragment"
+            app:destination="@id/categoryMealsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryMealsFragment"
+        android:name="com.example.dishdive.CategoryMealsFragment"
+        android:label="fragment_category_meals"
+        tools:layout="@layout/fragment_category_meals" >
+        <action
+            android:id="@+id/action_categoryMealsFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
 
 </navigation>

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import com.example.dishdive.db.MealLocalDataSource;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
+import com.example.dishdive.network.meal.NetworkCallBackCategories;
 import com.example.dishdive.network.meal.NetworkCallBackDetailsOfMeal;
 import com.example.dishdive.network.meal.NetworkCallBackPopularMeal;
 import com.example.dishdive.network.meal.NetworkCallBackRandomMeal;
@@ -43,6 +44,20 @@ public class MealRepository {
 
         });
 
+    }
+
+    public void getCategories(NetworkCallBackCategories networkCallBackCategories) {
+        mealRemoteDataSource.makeNetworkCallForCategories(new NetworkCallBackCategories() {
+            @Override
+            public void getCategoriesOnSuccess(List<Category> category) {
+                networkCallBackCategories.getCategoriesOnSuccess(category);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                networkCallBackCategories.onFailure(msg);
+            }
+        });
     }
 
     public void getPopularMeals(NetworkCallBackPopularMeal networkCallBackPopularMeal) {
@@ -94,10 +109,12 @@ public class MealRepository {
         Log.i("TAG", "onClick: entered to the repoo to add ");
         mealLocalDataSource.insertToPlan(meal);
     }
-    public void deleteMealFromPlan(Meal meal){
+
+    public void deleteMealFromPlan(Meal meal) {
         mealLocalDataSource.deleteFromPlan(meal);
     }
-    public LiveData<List<Meal>> getStoredPlannedMeals(String email){
+
+    public LiveData<List<Meal>> getStoredPlannedMeals(String email) {
         return mealLocalDataSource.getListLivePlanMeals(email);
     }
 }

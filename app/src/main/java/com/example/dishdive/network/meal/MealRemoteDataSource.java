@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.dishdive.model.Category;
+import com.example.dishdive.model.CategoryResponse;
 import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealResponse;
 import com.example.dishdive.model.PopularMeal;
@@ -19,7 +21,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-
 
 
 public class MealRemoteDataSource {
@@ -95,7 +96,7 @@ public class MealRemoteDataSource {
         });
     }
 
-    public void makeNetworkCallForGetDetailsOfMeal(String mealID,NetworkCallBackDetailsOfMeal networkCallBack) {
+    public void makeNetworkCallForGetDetailsOfMeal(String mealID, NetworkCallBackDetailsOfMeal networkCallBack) {
         Call<MealResponse> call = randomMealService.getMealDetails(mealID);
         call.enqueue(new Callback<MealResponse>() {
             @Override
@@ -112,6 +113,24 @@ public class MealRemoteDataSource {
             @Override
             public void onFailure(Call<MealResponse> call, Throwable t) {
                 networkCallBack.onFailure("failed to load meal");
+            }
+        });
+    }
+
+    public void makeNetworkCallForCategories(NetworkCallBackCategories networkCallBack) {
+        Call<CategoryResponse> call = randomMealService.getCategories();
+        call.enqueue(new Callback<CategoryResponse>() {
+            @Override
+            public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Category> categories = response.body().getCategories();
+                    networkCallBack.getCategoriesOnSuccess(categories);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CategoryResponse> call, Throwable t) {
+                networkCallBack.onFailure("failed to load meals");
             }
         });
     }

@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment implements HomeView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new HomePresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()) ,MealRemoteDataSource.getInstance()));
+        presenter = new HomePresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()));
         randomDailyImage = view.findViewById(R.id.dailyMeal);
         recyclerView = view.findViewById(R.id.popularRecycleView);
         btnSearch = view.findViewById(R.id.btnSearch);
@@ -86,11 +86,12 @@ public class HomeFragment extends Fragment implements HomeView {
         presenter.getPopularMealLiveData().observe(getViewLifecycleOwner(), new Observer<PopularMeal>() {
             @Override
             public void onChanged(PopularMeal popularMeal) {
-                if (popularMeal != null){
+                if (popularMeal != null) {
                     showPopularImage((List<PopularMeal>) popularMeal);
                 }
             }
-        });popularAdapter.setOnItemClickListener(new MostPopularAdapter.OnItemClickListener() {
+        });
+        popularAdapter.setOnItemClickListener(new MostPopularAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(PopularMeal meal) {
                 navigateToDetailsFragment(meal);
@@ -100,7 +101,7 @@ public class HomeFragment extends Fragment implements HomeView {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                navigateToSearchFragment("");
             }
         });
         current = auth.getCurrentUser();
@@ -149,6 +150,13 @@ public class HomeFragment extends Fragment implements HomeView {
         HomeFragmentDirections.ActionHomeFragmentToDetailsMealFragment action =
                 HomeFragmentDirections.actionHomeFragmentToDetailsMealFragment(
                         meal.getIdMeal(), meal.getStrMeal(), meal.getStrMealThumb());
+
+        NavHostFragment.findNavController(this).navigate(action);
+    }
+    private void navigateToSearchFragment(String name) {
+        HomeFragmentDirections.ActionHomeFragmentToSearchFragment action =
+                HomeFragmentDirections.actionHomeFragmentToSearchFragment(
+                        name);
 
         NavHostFragment.findNavController(this).navigate(action);
     }

@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
-        <TextView
+        <EditText
             android:id="@+id/searchText"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -67,65 +67,54 @@
         app:layout_constraintGuide_begin="16dp"
         app:singleSelection="true" />
 
+
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        android:layout_marginTop="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card1"
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipCountry"
             style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@color/accent"
             android:backgroundTint="@color/accent"
             android:text="@string/country"
             android:textColor="@color/secondary"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/chipIngrediant"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_default="spread" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipIngrediant"
             style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
             android:backgroundTint="@color/accent"
             android:text="@string/ingredient"
             android:textColor="@color/ic_launcher_background"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/chipCategory"
-            app:layout_constraintStart_toEndOf="@+id/chipCountry"
-            app:layout_constraintWidth_default="spread" />
+            app:layout_constraintStart_toEndOf="@+id/chipCountry" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipCategory"
             style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
             android:backgroundTint="@color/accent"
             android:text="@string/category"
             android:textColor="@color/secondary"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/chipIngrediant"
-            app:layout_constraintWidth_default="spread" />
+            app:layout_constraintStart_toEndOf="@+id/chipIngrediant" />
 
     </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
