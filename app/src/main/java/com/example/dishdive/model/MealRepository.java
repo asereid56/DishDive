@@ -10,6 +10,7 @@ import com.example.dishdive.network.meal.NetworkCallBackCategories;
 import com.example.dishdive.network.meal.NetworkCallBackCategoryMeals;
 import com.example.dishdive.network.meal.NetworkCallBackCountries;
 import com.example.dishdive.network.meal.NetworkCallBackDetailsOfMeal;
+import com.example.dishdive.network.meal.NetworkCallBackIngredients;
 import com.example.dishdive.network.meal.NetworkCallBackPopularMeal;
 import com.example.dishdive.network.meal.NetworkCallBackRandomMeal;
 import com.example.dishdive.network.meal.NetworkCallbackAreaMeals;
@@ -47,6 +48,21 @@ public class MealRepository {
 
         });
 
+    }
+
+    public void getAllIngredients(NetworkCallBackIngredients networkCallBackIngredients) {
+        mealRemoteDataSource.makeNetworkCallForIngredients(new NetworkCallBackIngredients() {
+            @Override
+            public void getAllIngredientsOnSuccess(List<Ingredient> ingredients) {
+                networkCallBackIngredients.getAllIngredientsOnSuccess(ingredients);
+              //  Log.i("Ingredients in repoo", "getAllIngredientsOnSuccess: " + ingredients.get(0));
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                networkCallBackIngredients.onFailure(msg);
+            }
+        });
     }
 
     public void getCategories(NetworkCallBackCategories networkCallBackCategories) {

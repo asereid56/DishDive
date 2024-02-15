@@ -1,37 +1,39 @@
 package com.example.dishdive.search.view;
 
-import android.content.Context;;
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dishdive.R;
-import com.example.dishdive.model.Country;
+import com.example.dishdive.model.Ingredient;
 
 import java.util.List;
 
-public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHolder> {
-    List<Country> countries;
+public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.MyViewHolder> {
+    List<Ingredient> ingredients;
     MyViewHolder holder;
     Context context;
     OnItemClickListener listener;
 
+    public IngredientAdapter(Context context, List<Ingredient> ingredients) {
+        this.context = context;
+        this.ingredients = ingredients;
+    }
+
+
     public interface OnItemClickListener {
-        void onItemClick(Country category);
+        public void onItemClick(Ingredient ingredient);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
-
-    public CountryAdapter(Context context, List<Country> countries) {
-        this.context = context;
-        this.countries = countries;
-    }
-
 
     @NonNull
     @Override
@@ -44,15 +46,15 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         this.holder = holder;
-        Country country = countries.get(position);
-        holder.countryName.setText(country.getStrArea());
+        Ingredient ingredient = ingredients.get(position);
+        holder.ingredientName.setText(ingredient.getStrIngredient());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 if (listener != null) {
                     int position = holder.getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(countries.get(position));
+                        listener.onItemClick(ingredients.get(position));
                     }
                 }
             }
@@ -62,22 +64,24 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return countries.size();
+        Log.i("TAG", "getItemCount: " +ingredients.size());
+        return ingredients.size();
+
     }
 
-    public void setCountries(List<Country> countries) {
-        this.countries = countries;
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
         notifyDataSetChanged();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         View view;
-        TextView countryName;
+        TextView ingredientName;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             view = itemView;
-            countryName = view.findViewById(R.id.countryItem);
+            ingredientName = view.findViewById(R.id.countryItem);
         }
     }
 }

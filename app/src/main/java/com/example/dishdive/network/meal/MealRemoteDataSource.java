@@ -8,6 +8,9 @@ import com.example.dishdive.model.Category;
 import com.example.dishdive.model.CategoryResponse;
 import com.example.dishdive.model.Country;
 import com.example.dishdive.model.CountryResponse;
+
+import com.example.dishdive.model.Ingredient;
+import com.example.dishdive.model.IngredientResponse;
 import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealResponse;
 import com.example.dishdive.model.PopularMeal;
@@ -28,7 +31,7 @@ public class MealRemoteDataSource {
     private static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
     private static Retrofit retrofit = null;
     private static MealRemoteDataSource insatance = null;
-    RandomMealService randomMealService;
+    MealsServices mealsServices;
     MutableLiveData<Meal> mealDetailsLiveData;
 
 
@@ -42,7 +45,7 @@ public class MealRemoteDataSource {
         OkHttpClient client = httpClient.build();
 
         retrofit = new Retrofit.Builder().client(client).addConverterFactory(GsonConverterFactory.create()).baseUrl(BASE_URL).build();
-        randomMealService = retrofit.create(RandomMealService.class);
+        mealsServices = retrofit.create(MealsServices.class);
     }
 
     public static synchronized MealRemoteDataSource getInstance() {
@@ -53,7 +56,7 @@ public class MealRemoteDataSource {
     }
 
     public void makeNetworkCallForDailyMail(NetworkCallBackRandomMeal networkCallBack) {
-        Call<MealResponse> call = randomMealService.getRandomMealForADay();
+        Call<MealResponse> call = mealsServices.getRandomMealForADay();
         call.enqueue(new Callback<MealResponse>() {
             @Override
             public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
@@ -78,7 +81,7 @@ public class MealRemoteDataSource {
     }
 
     public void makeNetworkCallForPopularMeal(NetworkCallBackPopularMeal networkCallBack) {
-        Call<PopularMealResponse> call = randomMealService.getPopularMeal("Seafood");
+        Call<PopularMealResponse> call = mealsServices.getPopularMeal("Seafood");
         call.enqueue(new Callback<PopularMealResponse>() {
             @Override
             public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
@@ -98,7 +101,7 @@ public class MealRemoteDataSource {
     }
 
     public void makeNetworkCallForGetDetailsOfMeal(String mealID, NetworkCallBackDetailsOfMeal networkCallBack) {
-        Call<MealResponse> call = randomMealService.getMealDetails(mealID);
+        Call<MealResponse> call = mealsServices.getMealDetails(mealID);
         call.enqueue(new Callback<MealResponse>() {
             @Override
             public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
@@ -117,7 +120,7 @@ public class MealRemoteDataSource {
     }
 
     public void makeNetworkCallForCategories(NetworkCallBackCategories networkCallBack) {
-        Call<CategoryResponse> call = randomMealService.getCategories();
+        Call<CategoryResponse> call = mealsServices.getCategories();
         call.enqueue(new Callback<CategoryResponse>() {
             @Override
             public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
@@ -135,7 +138,7 @@ public class MealRemoteDataSource {
     }
 
     public void makeNetworkCallForAreaMeals(String areaName, NetworkCallbackAreaMeals networkCallbackAreaMeals) {
-        Call<PopularMealResponse> call = randomMealService.getAreaMeals(areaName);
+        Call<PopularMealResponse> call = mealsServices.getAreaMeals(areaName);
         call.enqueue(new Callback<PopularMealResponse>() {
             @Override
             public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
@@ -155,7 +158,7 @@ public class MealRemoteDataSource {
     }
 
     public void makeNetworkCallForCategoryMeals(String categoryName, NetworkCallBackCategoryMeals networkCallBack) {
-        Call<PopularMealResponse> call = randomMealService.getCategoryMeals(categoryName);
+        Call<PopularMealResponse> call = mealsServices.getCategoryMeals(categoryName);
         call.enqueue(new Callback<PopularMealResponse>() {
             @Override
             public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
@@ -174,8 +177,27 @@ public class MealRemoteDataSource {
         });
     }
 
+    public void makeNetworkCallForIngredients(NetworkCallBackIngredients networkCallBackIngredients) {
+        Call<IngredientResponse> call = mealsServices.getIngredients();
+        call.enqueue(new Callback<IngredientResponse>() {
+            @Override
+            public void onResponse(Call<IngredientResponse> call, Response<IngredientResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Ingredient> ingredients = response.body().getIngredients();
+                    Log.i("TAG", "onResponse: " + ingredients);
+                    networkCallBackIngredients.getAllIngredientsOnSuccess(ingredients);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<IngredientResponse> call, Throwable t) {
+                networkCallBackIngredients.onFailure("Failed to fetch Ingredients");
+            }
+        });
+    }
+
     public void makeNetworkCallForCountries(NetworkCallBackCountries networkCallBack) {
-        Call<CountryResponse> call = randomMealService.getCountries();
+        Call<CountryResponse> call = mealsServices.getCountries();
         call.enqueue(new Callback<CountryResponse>() {
             @Override
             public void onResponse(Call<CountryResponse> call, Response<CountryResponse> response) {

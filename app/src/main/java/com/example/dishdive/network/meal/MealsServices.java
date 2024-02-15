@@ -2,6 +2,7 @@ package com.example.dishdive.network.meal;
 
 import com.example.dishdive.model.CategoryResponse;
 import com.example.dishdive.model.CountryResponse;
+import com.example.dishdive.model.IngredientResponse;
 import com.example.dishdive.model.MealResponse;
 import com.example.dishdive.model.PopularMealResponse;
 
@@ -9,7 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-public interface RandomMealService {
+public interface MealsServices {
     public final static String ID = "i";
     @GET("random.php")
     Call<MealResponse> getRandomMealForADay();
@@ -26,5 +27,8 @@ public interface RandomMealService {
 
     @GET("filter.php")
     Call<PopularMealResponse> getAreaMeals(@Query("a") String categoryName);
+
+    @GET("list.php?i=list")
+    Call<IngredientResponse> getIngredients();
 
 }
