@@ -8,9 +8,11 @@ import com.example.dishdive.db.MealLocalDataSource;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
 import com.example.dishdive.network.meal.NetworkCallBackCategories;
 import com.example.dishdive.network.meal.NetworkCallBackCategoryMeals;
+import com.example.dishdive.network.meal.NetworkCallBackCountries;
 import com.example.dishdive.network.meal.NetworkCallBackDetailsOfMeal;
 import com.example.dishdive.network.meal.NetworkCallBackPopularMeal;
 import com.example.dishdive.network.meal.NetworkCallBackRandomMeal;
+import com.example.dishdive.network.meal.NetworkCallbackAreaMeals;
 
 import java.util.List;
 
@@ -72,6 +74,35 @@ public class MealRepository {
             @Override
             public void onFailure(String msg) {
                 networkCallBackCategoryMeals.onFailure(msg);
+            }
+        });
+    }
+
+    public void getMealsOfArea(String areaName, NetworkCallbackAreaMeals networkCallbackAreaMeals) {
+        mealRemoteDataSource.makeNetworkCallForAreaMeals(areaName, new NetworkCallbackAreaMeals() {
+            @Override
+            public void categoryMealsOnSuccess(List<PopularMeal> meal) {
+                networkCallbackAreaMeals.categoryMealsOnSuccess(meal);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                networkCallbackAreaMeals.onFailure(msg);
+            }
+        });
+    }
+
+    public void getCountries(NetworkCallBackCountries networkCallBackCountries) {
+        mealRemoteDataSource.makeNetworkCallForCountries(new NetworkCallBackCountries() {
+            @Override
+            public void countryOnSuccess(List<Country> countries) {
+                networkCallBackCountries.countryOnSuccess(countries);
+                Log.i("Aser", "countryOnSuccess: " + countries);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                networkCallBackCountries.onFailure(msg);
             }
         });
     }

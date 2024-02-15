@@ -1,6 +1,7 @@
 package com.example.dishdive.network.meal;
 
 import com.example.dishdive.model.CategoryResponse;
+import com.example.dishdive.model.CountryResponse;
 import com.example.dishdive.model.MealResponse;
 import com.example.dishdive.model.PopularMealResponse;
 
@@ -20,5 +21,10 @@ public interface RandomMealService {
     Call<CategoryResponse> getCategories();
     @GET("filter.php")
     Call<PopularMealResponse> getCategoryMeals(@Query("c") String categoryName);
+    @GET("list.php?a=list")
+    Call<CountryResponse> getCountries();
+
+    @GET("filter.php")
+    Call<PopularMealResponse> getAreaMeals(@Query("a") String categoryName);
 
 }

@@ -25,8 +25,7 @@ import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealRepository;
 import com.example.dishdive.model.PopularMeal;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 
 import java.util.ArrayList;
 import java.util.List;

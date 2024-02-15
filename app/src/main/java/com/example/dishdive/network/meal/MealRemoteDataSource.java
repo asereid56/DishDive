@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.dishdive.model.Category;
 import com.example.dishdive.model.CategoryResponse;
+import com.example.dishdive.model.Country;
+import com.example.dishdive.model.CountryResponse;
 import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealResponse;
 import com.example.dishdive.model.PopularMeal;
@@ -19,7 +21,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 
@@ -133,6 +134,26 @@ public class MealRemoteDataSource {
         });
     }
 
+    public void makeNetworkCallForAreaMeals(String areaName, NetworkCallbackAreaMeals networkCallbackAreaMeals) {
+        Call<PopularMealResponse> call = randomMealService.getAreaMeals(areaName);
+        call.enqueue(new Callback<PopularMealResponse>() {
+            @Override
+            public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<PopularMeal> popularMeals = response.body().getMeals();
+                    if (popularMeals != null && !popularMeals.isEmpty()) {
+                        networkCallbackAreaMeals.categoryMealsOnSuccess(popularMeals);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PopularMealResponse> call, Throwable t) {
+                networkCallbackAreaMeals.onFailure("Failed to load Meals");
+            }
+        });
+    }
+
     public void makeNetworkCallForCategoryMeals(String categoryName, NetworkCallBackCategoryMeals networkCallBack) {
         Call<PopularMealResponse> call = randomMealService.getCategoryMeals(categoryName);
         call.enqueue(new Callback<PopularMealResponse>() {
@@ -151,7 +172,27 @@ public class MealRemoteDataSource {
                 networkCallBack.onFailure("Failed to load Meals");
             }
         });
-
-
     }
+
+    public void makeNetworkCallForCountries(NetworkCallBackCountries networkCallBack) {
+        Call<CountryResponse> call = randomMealService.getCountries();
+        call.enqueue(new Callback<CountryResponse>() {
+            @Override
+            public void onResponse(Call<CountryResponse> call, Response<CountryResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Country> countries = response.body().getAreaNames();
+                    Log.i("Aser", "onResponse: " + countries);
+                    networkCallBack.countryOnSuccess(countries); // Pass the countries list to the callback
+                } else {
+                    networkCallBack.onFailure("Failed to fetch countries");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CountryResponse> call, Throwable t) {
+                networkCallBack.onFailure("Failed to fetch countries");
+            }
+        });
+    }
+
 }
