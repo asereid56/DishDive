@@ -18,5 +18,7 @@ public interface RandomMealService {
     Call<PopularMealResponse> getPopularMeal(@Query("c") String categoryName);
     @GET("categories.php")
     Call<CategoryResponse> getCategories();
+    @GET("filter.php")
+    Call<PopularMealResponse> getCategoryMeals(@Query("c") String categoryName);
 
 }

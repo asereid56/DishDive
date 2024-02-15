@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -15,9 +16,11 @@ import android.view.ViewGroup;
 
 import com.example.dishdive.R;
 import com.example.dishdive.db.MealLocalDataSource;
+import com.example.dishdive.home.view.HomeFragmentDirections;
 import com.example.dishdive.home.view.MostPopularAdapter;
 import com.example.dishdive.model.Category;
 import com.example.dishdive.model.MealRepository;
+import com.example.dishdive.model.PopularMeal;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
 import com.example.dishdive.search.presenter.SearchPresenter;
 import com.google.android.material.chip.Chip;
@@ -29,7 +32,6 @@ import java.util.List;
 public class SearchFragment extends Fragment implements SearchView {
 
     private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
     SearchPresenter searchPresenter;
     CategoryAdapter categoryAdapter;
     ChipGroup chipGroup;
@@ -51,8 +53,7 @@ public class SearchFragment extends Fragment implements SearchView {
         recyclerView = view.findViewById(R.id.recycleView);
 
         searchPresenter = new SearchPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()), this);
-//        linearLayoutManager = new LinearLayoutManager(getContext());
-//        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>());
@@ -63,9 +64,15 @@ public class SearchFragment extends Fragment implements SearchView {
             @Override
             public void onCheckedChanged(@NonNull ChipGroup group, int checkedId) {
                 Chip chip = group.findViewById(checkedId);
-                if(chip != null){
+                if (chip != null) {
                     searchPresenter.onChipSelected(chip.getText().toString());
                 }
+            }
+        });
+        categoryAdapter.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Category category) {
+                navigateToCategoryMealsFragment(category);
             }
         });
     }
@@ -74,5 +81,13 @@ public class SearchFragment extends Fragment implements SearchView {
     public void showCategories(List<Category> categories) {
         categoryAdapter.setCategories(categories);
 
+    }
+
+    private void navigateToCategoryMealsFragment(Category category) {
+        SearchFragmentDirections.ActionSearchFragmentToCategoryMealsFragment action =
+                SearchFragmentDirections.actionSearchFragmentToCategoryMealsFragment(
+                        category.getStrCategory());
+
+        NavHostFragment.findNavController(this).navigate(action);
     }
 }

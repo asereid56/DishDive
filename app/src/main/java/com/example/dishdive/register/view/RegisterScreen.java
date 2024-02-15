@@ -55,6 +55,10 @@ public class RegisterScreen extends AppCompatActivity implements RegisterView, O
                     Toast.makeText(RegisterScreen.this, "Invalid email", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if(userPassword.isEmpty() || userConfirmPassword.isEmpty()){
+                    Toast.makeText(RegisterScreen.this, "Enter your password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 if (!userPassword.equals(userConfirmPassword)) {
                     Toast.makeText(RegisterScreen.this, "Passwords don't match", Toast.LENGTH_SHORT).show();

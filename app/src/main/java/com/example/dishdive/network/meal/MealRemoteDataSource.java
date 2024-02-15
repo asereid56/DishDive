@@ -105,8 +105,6 @@ public class MealRemoteDataSource {
                     Log.i("Meal", "onResponse: " + response.body().getMeals());
                     Meal meal = response.body().getMeals().get(0);
                     networkCallBack.getMealDetailsOnSuccess(meal);
-                } else {
-                    return;
                 }
             }
 
@@ -134,5 +132,26 @@ public class MealRemoteDataSource {
             }
         });
     }
-}
 
+    public void makeNetworkCallForCategoryMeals(String categoryName, NetworkCallBackCategoryMeals networkCallBack) {
+        Call<PopularMealResponse> call = randomMealService.getCategoryMeals(categoryName);
+        call.enqueue(new Callback<PopularMealResponse>() {
+            @Override
+            public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<PopularMeal> popularMeals = response.body().getMeals();
+                    if (popularMeals != null && !popularMeals.isEmpty()) {
+                        networkCallBack.categoryMealsOnSuccess(popularMeals);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PopularMealResponse> call, Throwable t) {
+                networkCallBack.onFailure("Failed to load Meals");
+            }
+        });
+
+
+    }
+}

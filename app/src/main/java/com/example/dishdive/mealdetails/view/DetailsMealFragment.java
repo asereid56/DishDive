@@ -1,35 +1,23 @@
 package com.example.dishdive.mealdetails.view;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-
 import android.provider.CalendarContract;
 import android.util.Log;
-import android.view.ContentInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
-
 import com.bumptech.glide.Glide;
 import com.example.dishdive.R;
-import com.example.dishdive.db.MealDataBase;
 import com.example.dishdive.db.MealLocalDataSource;
-import com.example.dishdive.favouritemeal.view.OnFavClickListener;
 import com.example.dishdive.mealdetails.presenter.MealDetailsPresenter;
 import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealRepository;
@@ -42,7 +30,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,9 +37,7 @@ import java.util.regex.Pattern;
 public class DetailsMealFragment extends Fragment implements MealDetailsView {
     MealDetailsPresenter presenter;
     Meal meal;
-    String mealName;
-    String mealID;
-    String mealThumb;
+    String mealName , mealID , mealThumb;
     ImageView imgMeal;
     CollapsingToolbarLayout collapsingToolbarLayout;
     TextView category;
@@ -81,7 +66,6 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
                              Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
         return inflater.inflate(R.layout.fragment_details_meal, container, false);
-
     }
 
     @Override
@@ -92,17 +76,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         setDetailstoUI();
         presenter = new MealDetailsPresenter(this , MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()) , MealRemoteDataSource.getInstance()));
         presenter.getMealDetails(mealID);
-//        mealMutableLiveData.observe(getViewLifecycleOwner(), new Observer<Meal>() {
-//            @Override
-//            public void onChanged(Meal meal) {
-//                if (meal != null) {
-//                    instructions.setText(meal.getStrInstructions());
-//                    category.setText("Category: " + meal.getStrCategory());
-//                    area.setText("Area: " + meal.getStrArea());
-//                    videoLink = meal.getStrYoutube().toString();
-//                }
-//            }
-//        });
+
         youtubeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,14 +105,15 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         btnPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogToAddToPlan();
-                Log.i("TAG", "onClick: added to plan ");
+                user = auth.getCurrentUser();
+                if(user != null){
+                    showDialogToAddToPlan();
+                }else{
+                    Toast.makeText(getContext(), "Log in First", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-
     }
-
 
     private void getInformationOfMealFromTheArgs() {
         DetailsMealFragmentArgs args = DetailsMealFragmentArgs.fromBundle(getArguments());
@@ -192,7 +167,6 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         category.setText("Category: " + meal.getStrCategory());
         area.setText("Area: " + meal.getStrArea());
         videoLink = meal.getStrYoutube().toString();
-
     }
 
     public static String extractVideoId(String youtubeUrl) {
@@ -216,11 +190,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
             youTubePlayerView.getYouTubePlayerWhenReady(new YouTubePlayerCallback() {
                 @Override
                 public void onYouTubePlayer(YouTubePlayer youTubePlayer) {
-                    if (isVideoReady) {
-                        youTubePlayer.play();
-                    } else {
                         youTubePlayer.pause();
-                    }
                 }
             });
             isVideoAppear = false;
@@ -232,7 +202,6 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
 
         String mealTitle = mealName;
         String mealDescription = instructions.getText().toString();
-
 
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)

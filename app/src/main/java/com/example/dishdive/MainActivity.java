@@ -13,7 +13,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       // FirebaseApp.initializeApp(this);
         BottomNavigationView bottomNavigationView = findViewById(R.id.btnNav);
         navController = Navigation.findNavController(this, R.id.mainFragment);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);

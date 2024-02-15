@@ -6,15 +6,11 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.example.dishdive.model.Meal;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
-public class MealLocalDataSource  {
+public class MealLocalDataSource {
     String email;
-    FirebaseAuth auth;
-    FirebaseUser user;
     Context context;
     private static MealLocalDataSource mealLocalDataSource = null;
     private MealDao mealDao;
@@ -28,9 +24,6 @@ public class MealLocalDataSource  {
     }
 
     private MealLocalDataSource(Context context) {
-//        auth = FirebaseAuth.getInstance();
-//        user = auth.getCurrentUser();
-//        email = user.getEmail();
         this.context = context;
         MealDataBase db = MealDataBase.getInstance(context.getApplicationContext());
         mealDao = db.getMealDao();
@@ -65,7 +58,6 @@ public class MealLocalDataSource  {
             @Override
             public void run() {
                 meal.setDbType("Plan");
-                Log.i("TAG", "onClick: entered to the local data source to add ");
                 mealDao.insertMeal(meal);
             }
         }).start();

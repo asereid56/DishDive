@@ -10,12 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.dishdive.R;
-import com.example.dishdive.home.view.MostPopularAdapter;
 import com.example.dishdive.model.Meal;
-import com.example.dishdive.model.PopularMeal;
-import com.example.dishdive.plan.view.OnPlanClickListener;
-
-
 import java.util.List;
 
 public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyViewHolder> {

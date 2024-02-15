@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.dishdive.R;
 
-import com.example.dishdive.home.view.MostPopularAdapter;
 import com.example.dishdive.model.Meal;
-import com.example.dishdive.model.PopularMeal;
 
 
 import java.util.List;
@@ -84,7 +82,6 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewHolder> 
         TextView txtDelete;
         TextView nameOfMeal;
 
-
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             mealImg = itemView.findViewById(R.id.mealPlanImg);
@@ -100,6 +97,5 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewHolder> 
     public void setOnItemClickListener(PlanAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
-
 }
 

@@ -38,15 +38,12 @@ public class HomeFragment extends Fragment implements HomeView {
     RecyclerView recyclerView;
     MostPopularAdapter popularAdapter;
     HomePresenter presenter;
-    FirebaseAuth auth;
-    FirebaseUser current;
     ImageView btnSearch;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        auth = FirebaseAuth.getInstance();
         return view;
     }
 
@@ -81,7 +78,6 @@ public class HomeFragment extends Fragment implements HomeView {
             }
         });
 
-
         presenter.getPopularMeals();
         presenter.getPopularMealLiveData().observe(getViewLifecycleOwner(), new Observer<PopularMeal>() {
             @Override
@@ -94,7 +90,9 @@ public class HomeFragment extends Fragment implements HomeView {
         popularAdapter.setOnItemClickListener(new MostPopularAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(PopularMeal meal) {
-                navigateToDetailsFragment(meal);
+                if (meal != null) {
+                    navigateToDetailsFragment(meal);
+                }
             }
         });
 
@@ -104,13 +102,7 @@ public class HomeFragment extends Fragment implements HomeView {
                 navigateToSearchFragment("");
             }
         });
-        current = auth.getCurrentUser();
-        if (current != null) {
-            String user = current.getEmail();
-            Log.d("User", "onViewCreated: " + user.toString());
-        } else {
-            Log.d("User", "onViewCreated: User is null");
-        }
+
     }
 
     @Override
@@ -142,7 +134,7 @@ public class HomeFragment extends Fragment implements HomeView {
 
             NavHostFragment.findNavController(this).navigate(action);
         } else {
-            return;
+            Log.d("HomeFragment", "onRandomMealCLick: meals not found ");
         }
     }
 
@@ -153,6 +145,7 @@ public class HomeFragment extends Fragment implements HomeView {
 
         NavHostFragment.findNavController(this).navigate(action);
     }
+
     private void navigateToSearchFragment(String name) {
         HomeFragmentDirections.ActionHomeFragmentToSearchFragment action =
                 HomeFragmentDirections.actionHomeFragmentToSearchFragment(
@@ -160,5 +153,4 @@ public class HomeFragment extends Fragment implements HomeView {
 
         NavHostFragment.findNavController(this).navigate(action);
     }
-
 }

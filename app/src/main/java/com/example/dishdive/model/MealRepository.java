@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.example.dishdive.db.MealLocalDataSource;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
 import com.example.dishdive.network.meal.NetworkCallBackCategories;
+import com.example.dishdive.network.meal.NetworkCallBackCategoryMeals;
 import com.example.dishdive.network.meal.NetworkCallBackDetailsOfMeal;
 import com.example.dishdive.network.meal.NetworkCallBackPopularMeal;
 import com.example.dishdive.network.meal.NetworkCallBackRandomMeal;
@@ -56,6 +57,21 @@ public class MealRepository {
             @Override
             public void onFailure(String msg) {
                 networkCallBackCategories.onFailure(msg);
+            }
+        });
+    }
+
+    public void getMealsOfCategory(String categoryName, NetworkCallBackCategoryMeals networkCallBackCategoryMeals) {
+        mealRemoteDataSource.makeNetworkCallForCategoryMeals(categoryName, new NetworkCallBackCategoryMeals() {
+
+            @Override
+            public void categoryMealsOnSuccess(List<PopularMeal> meal) {
+                networkCallBackCategoryMeals.categoryMealsOnSuccess(meal);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                networkCallBackCategoryMeals.onFailure(msg);
             }
         });
     }

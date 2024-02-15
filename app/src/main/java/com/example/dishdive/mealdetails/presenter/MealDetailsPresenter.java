@@ -22,11 +22,9 @@ public class MealDetailsPresenter implements NetworkCallBackDetailsOfMeal {
     MealDetailsView view;
     Context context;
 
-
     public MealDetailsPresenter (DetailsMealFragment detailsMealFragment , MealRepository mealRepository){
-      //  this.context = detailsMealFragment.getContext().getApplicationContext();
         this.view = detailsMealFragment;
-        this.mealRepository =  mealRepository;//MealRepository.getInstance(MealLocalDataSource.getInstance(context) , MealRemoteDataSource.getInstance());
+        this.mealRepository =  mealRepository;
     }
 
     public void getMealDetails(String id){
@@ -40,16 +38,13 @@ public class MealDetailsPresenter implements NetworkCallBackDetailsOfMeal {
 
     @Override
     public void onFailure(String msg) {
-       // Toast.makeText(context, "Failed to load meal", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
     public void addToFav(Meal meal){
-       // Toast.makeText(context, "Added to Favourite", Toast.LENGTH_SHORT).show();
-
         mealRepository.insertMealToFav(meal);
     }
 
     public void addToPlan(Meal meal) {
-        Log.i("TAG", "onClick: entered to the presenter to add");
         mealRepository.insertMealToPlan(meal);
     }
 }

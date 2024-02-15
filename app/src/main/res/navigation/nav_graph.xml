@@ -42,8 +42,7 @@
         android:id="@+id/profileFragment"
         android:name="com.example.dishdive.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
-    </fragment>
+        tools:layout="@layout/fragment_profile"></fragment>
     <fragment
         android:id="@+id/detailsMealFragment"
         android:name="com.example.dishdive.mealdetails.view.DetailsMealFragment"
@@ -71,7 +70,7 @@
         android:id="@+id/searchFragment"
         android:name="com.example.dishdive.search.view.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
 
         <action
             android:id="@+id/action_searchFragment_to_homeFragment"
@@ -85,12 +84,18 @@
     </fragment>
     <fragment
         android:id="@+id/categoryMealsFragment"
-        android:name="com.example.dishdive.CategoryMealsFragment"
+        android:name="com.example.dishdive.categorymeals.view.CategoryMealsFragment"
         android:label="fragment_category_meals"
-        tools:layout="@layout/fragment_category_meals" >
+        tools:layout="@layout/fragment_category_meals">
         <action
             android:id="@+id/action_categoryMealsFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <argument
+            android:name="category_name"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_categoryMealsFragment_to_detailsMealFragment"
+            app:destination="@id/detailsMealFragment" />
     </fragment>
 
 </navigation>

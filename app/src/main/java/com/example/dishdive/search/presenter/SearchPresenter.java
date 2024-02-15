@@ -5,7 +5,6 @@ import android.widget.Toast;
 
 import com.example.dishdive.model.Category;
 import com.example.dishdive.model.MealRepository;
-import com.example.dishdive.network.meal.MealRemoteDataSource;
 import com.example.dishdive.network.meal.NetworkCallBackCategories;
 import com.example.dishdive.search.view.SearchView;
 

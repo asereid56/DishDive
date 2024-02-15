@@ -15,8 +15,6 @@ import androidx.lifecycle.Observer;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,15 +22,10 @@ import android.widget.Toast;
 
 import com.example.dishdive.R;
 import com.example.dishdive.db.MealLocalDataSource;
-import com.example.dishdive.favouritemeal.presenter.FavouritePresenter;
-import com.example.dishdive.favouritemeal.view.FavouriteAdapter;
-import com.example.dishdive.home.view.HomeFragmentDirections;
-import com.example.dishdive.home.view.MostPopularAdapter;
 import com.example.dishdive.login.view.LoginScreen;
 import com.example.dishdive.mealdetails.view.DetailsMealFragment;
 import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealRepository;
-import com.example.dishdive.model.PopularMeal;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
 import com.example.dishdive.plan.presenter.PlanPresenter;
 
@@ -64,10 +57,8 @@ public class PlanFragment extends Fragment implements PlanView,OnPlanClickListen
         super.onViewCreated(view, savedInstanceState);
         preferences = getActivity().getSharedPreferences("AuthState", Context.MODE_PRIVATE);
         if (preferences.getBoolean("isLoggedIn", false)) {
-            // User is logged in, show favorite meals
             setupPlannedFragmentFragment();
         } else {
-            // User is not logged in, show custom dialog
             showLoginDialog();
         }
 

@@ -1,4 +1,5 @@
 package com.example.dishdive.favouritemeal.view;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -93,7 +94,9 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavC
         favouriteAdapter.OnItemClickListenerToDetails(new FavouriteAdapter.OnItemClickListenerToDetails() {
             @Override
             public void onItemClick(Meal meal) {
-                navigateToDetailsFragment(meal);
+                if (meal != null) {
+                    navigateToDetailsFragment(meal);
+                }
             }
         });
     }
@@ -114,7 +117,6 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavC
         builder.setNegativeButton("Go Back", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 getActivity().onBackPressed();
             }
         });
@@ -134,6 +136,7 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavC
         Toast.makeText(getContext(), "Removed", Toast.LENGTH_SHORT).show();
         favouritePresenter.deleteFromFav(meal);
     }
+
     private void navigateToDetailsFragment(Meal meal) {
         FavouriteFragmentDirections.ActionFavouriteFragmentToDetailsMealFragment action =
                 FavouriteFragmentDirections.actionFavouriteFragmentToDetailsMealFragment(

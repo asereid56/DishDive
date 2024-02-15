@@ -1,15 +1,12 @@
 package com.example.dishdive.home.presenter;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.dishdive.home.view.HomeFragment;
 import com.example.dishdive.home.view.HomeView;
-import com.example.dishdive.login.presenter.LoginPresenter;
 import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealRepository;
 import com.example.dishdive.model.PopularMeal;
@@ -61,8 +58,6 @@ public class HomePresenter implements NetworkCallBackRandomMeal, NetworkCallBack
         Toast.makeText(context,
                 "Failed to load meal: " + msg,
                 Toast.LENGTH_SHORT).show();
-
     }
-
 }
 

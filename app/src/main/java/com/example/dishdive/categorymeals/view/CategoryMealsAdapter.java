@@ -1,8 +1,6 @@
-package com.example.dishdive.search.view;
-
+package com.example.dishdive.categorymeals.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,28 +12,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.dishdive.R;
-import com.example.dishdive.model.Category;
 import com.example.dishdive.model.PopularMeal;
 
 import java.util.List;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
-    List<Category> categories;
+public class CategoryMealsAdapter extends RecyclerView.Adapter<CategoryMealsAdapter.MyViewHolder> {
+    List<PopularMeal> meals;
     MyViewHolder holder;
     Context context;
     OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(Category category);
+        void onItemClick(PopularMeal meal);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public CategoryAdapter(Context context, List<Category> categories) {
+    public CategoryMealsAdapter(Context context, List<PopularMeal> meals) {
         this.context = context;
-        this.categories = categories;
+        this.meals = meals;
     }
 
 
@@ -50,16 +47,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         this.holder = holder;
-        Category category = categories.get(position);
-        holder.categoryName.setText(category.getStrCategory());
-        Glide.with(this.context).load(categories.get(position).getStrCategoryThumb().toString()).into(holder.img);
+        PopularMeal meal = meals.get(position);
+        holder.categoryName.setText(meal.getStrMeal());
+        Glide.with(this.context).load(meals.get(position).getStrMealThumb().toString()).into(holder.img);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (listener != null) {
                     int position = holder.getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(categories.get(position));
+                        listener.onItemClick(meals.get(position));
                     }
                 }
             }
@@ -69,11 +66,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return categories.size();
+        return meals.size();
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setCategoryMeals(List<PopularMeal> meals) {
+        this.meals = meals;
         notifyDataSetChanged();
     }
 
@@ -90,3 +87,4 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
         }
     }
 }
+

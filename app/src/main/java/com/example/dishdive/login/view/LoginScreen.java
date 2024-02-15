@@ -1,4 +1,5 @@
 package com.example.dishdive.login.view;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -12,15 +13,15 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.dishdive.MainActivity;
 import com.example.dishdive.R;
 import com.example.dishdive.login.presenter.LoginPresenter;
 import com.example.dishdive.network.user.UsersRemoteDataSource;
 import com.example.dishdive.register.view.RegisterScreen;
-import com.google.firebase.auth.FirebaseAuth;
 
-public class LoginScreen extends AppCompatActivity implements OnLoginClickListener , LoginView {
-    private static final String USERDATA = "USERDATA";
+
+public class LoginScreen extends AppCompatActivity implements OnLoginClickListener, LoginView {
     TextView emailAddress;
     TextView password;
     ImageButton btnGoogle;
@@ -56,19 +57,24 @@ public class LoginScreen extends AppCompatActivity implements OnLoginClickListen
         btnGuest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (LoginScreen.this , MainActivity.class);
-                startActivity(intent);
-                finish();
+                if (!isInternetConnected()) {
+                    Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(LoginScreen.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onLoginClicked(emailAddress.getText().toString().trim(),password.getText().toString().trim());
+                onLoginClicked(emailAddress.getText().toString().trim(), password.getText().toString().trim());
             }
         });
     }
-    public void initUI(){
+
+    public void initUI() {
         emailAddress = findViewById(R.id.textEmail);
         password = findViewById(R.id.textPass);
         btnFacebook = findViewById(R.id.btnFaceBook);
@@ -77,12 +83,9 @@ public class LoginScreen extends AppCompatActivity implements OnLoginClickListen
         btnGuest = findViewById(R.id.btnGuest);
         btnLogin = findViewById(R.id.btnLogin);
     }
+
     @Override
     public void loginSuccess() {
-//        Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show();
-//        Intent intent = new Intent(LoginScreen.this , MainActivity.class);
-//        startActivity(intent);
-//        finish();
         Toast.makeText(this, "Login Success", Toast.LENGTH_SHORT).show();
         navigateToMainActivity();
     }
@@ -98,21 +101,16 @@ public class LoginScreen extends AppCompatActivity implements OnLoginClickListen
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Check for valid email using regex
         if (!isValidEmail(email)) {
             Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(password.isEmpty()){
+        if (password.isEmpty()) {
             Toast.makeText(this, "Please Enter your password", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Check for internet connection
-
-
-        // Proceed with login
-        loginPresenter.loginIn(email,password);
+        loginPresenter.loginIn(email, password);
     }
 
     private boolean isValidEmail(String email) {
@@ -129,6 +127,7 @@ public class LoginScreen extends AppCompatActivity implements OnLoginClickListen
         }
         return false;
     }
+
     private void navigateToMainActivity() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
