@@ -13,36 +13,34 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface MealsServices {
-    public final static String ID = "i";
-
     @GET("random.php")
     Single<MealResponse> getRandomMealForADay();
 
     @GET("lookup.php?")
-    Call<MealResponse> getMealDetails(@Query(ID) String id);
+    Single<MealResponse> getMealDetails(@Query("i") String id);
 
     @GET("filter.php?")
-    Call<PopularMealResponse> getPopularMeal(@Query("c") String categoryName);
+    Single<PopularMealResponse> getPopularMeal(@Query("c") String categoryName);
 
     @GET("categories.php")
-    Call<CategoryResponse> getCategories();
+    Single<CategoryResponse> getCategories();
 
     @GET("filter.php")
-    Call<PopularMealResponse> getCategoryMeals(@Query("c") String categoryName);
+    Single<PopularMealResponse> getCategoryMeals(@Query("c") String categoryName);
 
     @GET("list.php?a=list")
-    Call<CountryResponse> getCountries();
+    Single<CountryResponse> getCountries();
 
     @GET("filter.php")
-    Call<PopularMealResponse> getAreaMeals(@Query("a") String categoryName);
+    Single<PopularMealResponse> getAreaMeals(@Query("a") String categoryName);
 
     @GET("list.php?i=list")
-    Call<IngredientResponse> getIngredients();
+    Single<IngredientResponse> getIngredients();
 
     @GET("filter.php")
-    Call<PopularMealResponse> getIngredientsMeals(@Query("i") String ingredientName);
+    Single<PopularMealResponse> getIngredientsMeals(@Query("i") String ingredientName);
 
     @GET("search.php")
-    Call<MealResponse> getMealsByName(@Query("s") String mealName);
+    Single<MealResponse> getMealsByName(@Query("s") String mealName);
 
 }

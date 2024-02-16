@@ -1,7 +1,5 @@
 package com.example.dishdive.model;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 
 import com.example.dishdive.db.MealLocalDataSource;
@@ -37,157 +35,44 @@ public class MealRepository {
     }
 
     public void getRandomMeal(NetworkCallBackRandomMeal networkCallBackRandomMeal) {
-        mealRemoteDataSource.makeNetworkCallForDailyMail(new NetworkCallBackRandomMeal() {
-            @Override
-            public void dealyMealOnSuccess(Meal meal) {
-                networkCallBackRandomMeal.dealyMealOnSuccess(meal);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallBackRandomMeal.onFailure(msg);
-            }
-
-        });
-
+        mealRemoteDataSource.makeNetworkCallForDailyMail(networkCallBackRandomMeal);
     }
 
     public void getAllIngredients(NetworkCallBackIngredients networkCallBackIngredients) {
-        mealRemoteDataSource.makeNetworkCallForIngredients(new NetworkCallBackIngredients() {
-            @Override
-            public void getAllIngredientsOnSuccess(List<Ingredient> ingredients) {
-                networkCallBackIngredients.getAllIngredientsOnSuccess(ingredients);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallBackIngredients.onFailure(msg);
-            }
-        });
+        mealRemoteDataSource.makeNetworkCallForIngredients(networkCallBackIngredients);
     }
 
     public void getCategories(NetworkCallBackCategories networkCallBackCategories) {
-        mealRemoteDataSource.makeNetworkCallForCategories(new NetworkCallBackCategories() {
-            @Override
-            public void getCategoriesOnSuccess(List<Category> category) {
-                networkCallBackCategories.getCategoriesOnSuccess(category);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallBackCategories.onFailure(msg);
-            }
-        });
+        mealRemoteDataSource.makeNetworkCallForCategories(networkCallBackCategories);
     }
 
     public void getMealsOfCategory(String categoryName, NetworkCallBackCategoryMeals networkCallBackCategoryMeals) {
-        mealRemoteDataSource.makeNetworkCallForCategoryMeals(categoryName, new NetworkCallBackCategoryMeals() {
-
-            @Override
-            public void categoryMealsOnSuccess(List<PopularMeal> meal) {
-                networkCallBackCategoryMeals.categoryMealsOnSuccess(meal);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallBackCategoryMeals.onFailure(msg);
-            }
-        });
+        mealRemoteDataSource.makeNetworkCallForCategoryMeals(categoryName, networkCallBackCategoryMeals);
     }
 
     public void getMealsOfIngredients(String ingredientName, NetworkCallBackIngredientsMeals networkCallBack) {
-        mealRemoteDataSource.makeNetworkCallForIngredientsMeals(ingredientName, new NetworkCallBackIngredientsMeals() {
-            @Override
-            public void ingredientsMealsOnSuccess(List<PopularMeal> meal) {
-                networkCallBack.ingredientsMealsOnSuccess(meal);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallBack.onFailure(msg);
-            }
-        });
+        mealRemoteDataSource.makeNetworkCallForIngredientsMeals(ingredientName, networkCallBack);
     }
 
     public void getMealsByName(String nameOfMeal, NetworkCallBackSearchByName networkCallBack) {
-        mealRemoteDataSource.makeNetworkCallForSearchByName(nameOfMeal, new NetworkCallBackSearchByName() {
-            @Override
-            public void mealOnSuccess(List<Meal> meal) {
-                if(meal!= null){
-                    networkCallBack.mealOnSuccess(meal);
-                }else{
-                    networkCallBack.mealOnSuccess(null);
-                }
-
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallBack.onFailure(msg);
-            }
-        });
+        mealRemoteDataSource.makeNetworkCallForSearchByName(nameOfMeal, networkCallBack);
     }
 
 
     public void getMealsOfArea(String areaName, NetworkCallbackAreaMeals networkCallbackAreaMeals) {
-        mealRemoteDataSource.makeNetworkCallForAreaMeals(areaName, new NetworkCallbackAreaMeals() {
-            @Override
-            public void categoryMealsOnSuccess(List<PopularMeal> meal) {
-                networkCallbackAreaMeals.categoryMealsOnSuccess(meal);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallbackAreaMeals.onFailure(msg);
-            }
-        });
+        mealRemoteDataSource.makeNetworkCallForAreaMeals(areaName, networkCallbackAreaMeals);
     }
 
     public void getCountries(NetworkCallBackCountries networkCallBackCountries) {
-        mealRemoteDataSource.makeNetworkCallForCountries(new NetworkCallBackCountries() {
-            @Override
-            public void countryOnSuccess(List<Country> countries) {
-                networkCallBackCountries.countryOnSuccess(countries);
-                Log.i("Aser", "countryOnSuccess: " + countries);
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallBackCountries.onFailure(msg);
-            }
-        });
+        mealRemoteDataSource.makeNetworkCallForCountries(networkCallBackCountries);
     }
 
     public void getPopularMeals(NetworkCallBackPopularMeal networkCallBackPopularMeal) {
-        mealRemoteDataSource.makeNetworkCallForPopularMeal(new NetworkCallBackPopularMeal() {
-            @Override
-            public void popularMealOnSuccess(List<PopularMeal> meal) {
-                if (meal != null) {
-                    networkCallBackPopularMeal.popularMealOnSuccess(meal);
-                }
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallBackPopularMeal.onFailure(msg);
-            }
-        });
+        mealRemoteDataSource.makeNetworkCallForPopularMeal(networkCallBackPopularMeal);
     }
 
     public void getDetailsOfMeal(String mealID, NetworkCallBackDetailsOfMeal networkCallBackDetailsOfMeal) {
-        mealRemoteDataSource.makeNetworkCallForGetDetailsOfMeal(mealID, new NetworkCallBackDetailsOfMeal() {
-            @Override
-            public void getMealDetailsOnSuccess(Meal meal) {
-                if (meal != null) {
-                    networkCallBackDetailsOfMeal.getMealDetailsOnSuccess(meal);
-                }
-            }
-
-            @Override
-            public void onFailure(String msg) {
-                networkCallBackDetailsOfMeal.onFailure(msg);
-            }
-        });
+        mealRemoteDataSource.makeNetworkCallForGetDetailsOfMeal(mealID, networkCallBackDetailsOfMeal);
     }
 
     public void insertMealToFav(Meal meal) {
@@ -204,7 +89,6 @@ public class MealRepository {
 
 
     public void insertMealToPlan(Meal meal) {
-        Log.i("TAG", "onClick: entered to the repoo to add ");
         mealLocalDataSource.insertToPlan(meal);
     }
 

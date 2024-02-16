@@ -92,15 +92,17 @@ public class SearchFragment extends Fragment implements SearchView {
                 if (chip != null) {
                     String chipText = chip.getText().toString();
                     if (chipText.equals("Category")) {
-                        categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>());
-                        recyclerView.swapAdapter(categoryAdapter ,true );
+                        categoryAdapter.notifyDataSetChanged();
+                        categoryAdapter.setCategories(categoryAdapter.categories);
+                        recyclerView.setAdapter(categoryAdapter);
                     } else if (chipText.equals("Country")) {
-                        countryAdapter = new CountryAdapter(getContext(), new ArrayList<>());
-                        recyclerView.swapAdapter(countryAdapter ,true );
+                        countryAdapter.notifyDataSetChanged();
+                        countryAdapter.setCountries(countryAdapter.countries);
+                        recyclerView.setAdapter(countryAdapter);
                     } else if (chipText.equals("Ingredient")) {
-                       ingredientAdapter = new IngredientAdapter(getContext(), new ArrayList<>());
-                        //recyclerView.setAdapter(ingredientAdapter);
-                        recyclerView.swapAdapter(ingredientAdapter ,true );
+                        ingredientAdapter.notifyDataSetChanged();
+                        ingredientAdapter.setIngredients(ingredientAdapter.ingredients);
+                        recyclerView.setAdapter(ingredientAdapter);
                     }
                     searchPresenter.onChipSelected(chipText);
                 }

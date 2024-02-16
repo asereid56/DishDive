@@ -2,8 +2,6 @@ package com.example.dishdive.network.meal;
 
 import android.util.Log;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.example.dishdive.model.Category;
 import com.example.dishdive.model.CategoryResponse;
 import com.example.dishdive.model.Country;
@@ -19,7 +17,6 @@ import com.example.dishdive.model.PopularMealResponse;
 import java.util.List;
 
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
-import io.reactivex.Observable;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -37,7 +34,6 @@ public class MealRemoteDataSource {
     private static Retrofit retrofit = null;
     private static MealRemoteDataSource insatance = null;
     MealsServices mealsServices;
-    MutableLiveData<Meal> mealDetailsLiveData;
 
 
     private MealRemoteDataSource() {
@@ -67,8 +63,8 @@ public class MealRemoteDataSource {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        (PopularMealResponse) -> {
-                            networkCallBack.dealyMealOnSuccess(PopularMealResponse.getMeals().get(0));
+                        (dailyMeal) -> {
+                            networkCallBack.dealyMealOnSuccess(dailyMeal.getMeals().get(0));
                         },
                         e -> {
                             networkCallBack.onFailure(e.toString());
@@ -78,185 +74,134 @@ public class MealRemoteDataSource {
     }
 
     public void makeNetworkCallForPopularMeal(NetworkCallBackPopularMeal networkCallBack) {
-        Call<PopularMealResponse> call = mealsServices.getPopularMeal("Seafood");
-        call.enqueue(new Callback<PopularMealResponse>() {
-            @Override
-            public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<PopularMeal> popularMeals = response.body().getMeals();
-                    if (popularMeals != null && !popularMeals.isEmpty()) {
-                        networkCallBack.popularMealOnSuccess(popularMeals);
-                    }
-                }
-            }
+        Single<PopularMealResponse> observable = mealsServices.getPopularMeal("Seafood");
 
-            @Override
-            public void onFailure(Call<PopularMealResponse> call, Throwable t) {
-                networkCallBack.onFailure("failed to load meals");
-            }
-        });
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((popularMeals) -> {
+                            networkCallBack.popularMealOnSuccess(popularMeals.getMeals());
+                        },
+                        e -> {
+                            networkCallBack.onFailure(e.toString());
+                        });
     }
 
-    public void makeNetworkCallForGetDetailsOfMeal(String mealID, NetworkCallBackDetailsOfMeal networkCallBack) {
-        Call<MealResponse> call = mealsServices.getMealDetails(mealID);
-        call.enqueue(new Callback<MealResponse>() {
-            @Override
-            public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Log.i("Meal", "onResponse: " + response.body().getMeals());
-                    Meal meal = response.body().getMeals().get(0);
-                    networkCallBack.getMealDetailsOnSuccess(meal);
-                }
-            }
 
-            @Override
-            public void onFailure(Call<MealResponse> call, Throwable t) {
-                networkCallBack.onFailure("failed to load meal");
-            }
-        });
+    public void makeNetworkCallForGetDetailsOfMeal(String mealID, NetworkCallBackDetailsOfMeal networkCallBack) {
+        Single<MealResponse> observable = mealsServices.getMealDetails(mealID);
+
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (mealDetails) -> {
+                            networkCallBack.getMealDetailsOnSuccess(mealDetails.getMeals().get(0));
+                        },
+                        e -> {
+                            networkCallBack.onFailure(e.toString());
+                        });
     }
 
     public void makeNetworkCallForCategories(NetworkCallBackCategories networkCallBack) {
-        Call<CategoryResponse> call = mealsServices.getCategories();
-        call.enqueue(new Callback<CategoryResponse>() {
-            @Override
-            public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Category> categories = response.body().getCategories();
-                    networkCallBack.getCategoriesOnSuccess(categories);
-                }
-            }
+        Single<CategoryResponse> observable = mealsServices.getCategories();
 
-            @Override
-            public void onFailure(Call<CategoryResponse> call, Throwable t) {
-                networkCallBack.onFailure("failed to load meals");
-            }
-        });
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(categoryResponse -> {
+                            networkCallBack.getCategoriesOnSuccess(categoryResponse.getCategories());
+                        },
+                        e -> {
+                            networkCallBack.onFailure(e.toString());
+                        });
     }
 
     public void makeNetworkCallForAreaMeals(String areaName, NetworkCallbackAreaMeals networkCallbackAreaMeals) {
-        Call<PopularMealResponse> call = mealsServices.getAreaMeals(areaName);
-        call.enqueue(new Callback<PopularMealResponse>() {
-            @Override
-            public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<PopularMeal> popularMeals = response.body().getMeals();
-                    if (popularMeals != null && !popularMeals.isEmpty()) {
-                        networkCallbackAreaMeals.categoryMealsOnSuccess(popularMeals);
-                    }
-                }
-            }
+        Single<PopularMealResponse> observable = mealsServices.getAreaMeals(areaName);
 
-            @Override
-            public void onFailure(Call<PopularMealResponse> call, Throwable t) {
-                networkCallbackAreaMeals.onFailure("Failed to load Meals");
-            }
-        });
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(popularMealResponse -> {
+                            List<PopularMeal> popularMeals = popularMealResponse.getMeals();
+                            if (popularMeals != null && !popularMeals.isEmpty()) {
+                                networkCallbackAreaMeals.categoryMealsOnSuccess(popularMeals);
+                            }
+                        },
+                        e -> networkCallbackAreaMeals.onFailure("Failed to load Area Meals"));
     }
+
+
 
     public void makeNetworkCallForIngredientsMeals(String ingredientName, NetworkCallBackIngredientsMeals networkCallBack) {
-        Call<PopularMealResponse> call = mealsServices.getIngredientsMeals(ingredientName);
-        call.enqueue(new Callback<PopularMealResponse>() {
-            @Override
-            public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<PopularMeal> popularMeals = response.body().getMeals();
-                    if (popularMeals != null && !popularMeals.isEmpty()) {
-                        networkCallBack.ingredientsMealsOnSuccess(popularMeals);
-                    }
-                }
-            }
+        Single<PopularMealResponse> observable = mealsServices.getIngredientsMeals(ingredientName);
 
-            @Override
-            public void onFailure(Call<PopularMealResponse> call, Throwable t) {
-                networkCallBack.onFailure("Failed to load Meals");
-            }
-        });
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(popularMealResponse -> {
+                            List<PopularMeal> popularMeals = popularMealResponse.getMeals();
+                            if (popularMeals != null && !popularMeals.isEmpty()) {
+                                networkCallBack.ingredientsMealsOnSuccess(popularMeals);
+                            }
+                        },
+                        throwable -> networkCallBack.onFailure("Failed to load Meals"));
     }
+
 
     public void makeNetworkCallForSearchByName(String nameOfMeal, NetworkCallBackSearchByName networkCallBack) {
-        Call<MealResponse> call = mealsServices.getMealsByName(nameOfMeal);
-        call.enqueue(new Callback<MealResponse>() {
-            @Override
-            public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Meal> meals = null;
-                    if (response.body().getMeals() != null) {
-                        meals = response.body().getMeals();
-                    }
-                    if (meals != null) {
-                        networkCallBack.mealOnSuccess(meals);
-                    } else {
-                        networkCallBack.mealOnSuccess(null);
-                    }
-                }
-            }
+        Single<MealResponse> observable = mealsServices.getMealsByName(nameOfMeal);
 
-            @Override
-            public void onFailure(Call<MealResponse> call, Throwable t) {
-                networkCallBack.onFailure("Failed to Load Meals");
-            }
-        });
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mealResponse -> {
+                            List<Meal> meals = mealResponse.getMeals();
+                            if (meals != null) {
+                                networkCallBack.mealOnSuccess(meals);
+                            } else {
+                                networkCallBack.mealOnSuccess(null);
+                            }
+                        },
+                        e -> networkCallBack.onFailure("Failed to Load Meals"));
     }
 
-    public void makeNetworkCallForCategoryMeals(String categoryName, NetworkCallBackCategoryMeals networkCallBack) {
-        Call<PopularMealResponse> call = mealsServices.getCategoryMeals(categoryName);
-        call.enqueue(new Callback<PopularMealResponse>() {
-            @Override
-            public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<PopularMeal> popularMeals = response.body().getMeals();
-                    if (popularMeals != null && !popularMeals.isEmpty()) {
-                        networkCallBack.categoryMealsOnSuccess(popularMeals);
-                    }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<PopularMealResponse> call, Throwable t) {
-                networkCallBack.onFailure("Failed to load Meals");
-            }
-        });
+    public void makeNetworkCallForCategoryMeals(String categoryName, NetworkCallBackCategoryMeals networkCallBack) {
+        Single<PopularMealResponse> observable = mealsServices.getCategoryMeals(categoryName);
+
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(popularMealResponse -> {
+                            List<PopularMeal> popularMeals = popularMealResponse.getMeals();
+                            if (popularMeals != null && !popularMeals.isEmpty()) {
+                                networkCallBack.categoryMealsOnSuccess(popularMeals);
+                            }
+                        },
+                        e -> networkCallBack.onFailure("Failed to load Category Meals"));
     }
 
     public void makeNetworkCallForIngredients(NetworkCallBackIngredients networkCallBackIngredients) {
-        Call<IngredientResponse> call = mealsServices.getIngredients();
-        call.enqueue(new Callback<IngredientResponse>() {
-            @Override
-            public void onResponse(Call<IngredientResponse> call, Response<IngredientResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Ingredient> ingredients = response.body().getIngredients();
-                    Log.i("TAG", "onResponse: " + ingredients);
-                    networkCallBackIngredients.getAllIngredientsOnSuccess(ingredients);
-                }
-            }
+        Single<IngredientResponse> observable = mealsServices.getIngredients();
 
-            @Override
-            public void onFailure(Call<IngredientResponse> call, Throwable t) {
-                networkCallBackIngredients.onFailure("Failed to fetch Ingredients");
-            }
-        });
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ingredientResponse -> {
+                            List<Ingredient> ingredients = ingredientResponse.getIngredients();
+                            if (ingredients != null) {
+                                networkCallBackIngredients.getAllIngredientsOnSuccess(ingredients);
+                            }
+                        },
+                        e -> networkCallBackIngredients.onFailure("Failed to fetch Ingredients"));
     }
 
     public void makeNetworkCallForCountries(NetworkCallBackCountries networkCallBack) {
-        Call<CountryResponse> call = mealsServices.getCountries();
-        call.enqueue(new Callback<CountryResponse>() {
-            @Override
-            public void onResponse(Call<CountryResponse> call, Response<CountryResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Country> countries = response.body().getAreaNames();
-                    Log.i("Aser", "onResponse: " + countries);
-                    networkCallBack.countryOnSuccess(countries); // Pass the countries list to the callback
-                } else {
-                    networkCallBack.onFailure("Failed to fetch countries");
-                }
-            }
+        Single<CountryResponse> observable = mealsServices.getCountries();
 
-            @Override
-            public void onFailure(Call<CountryResponse> call, Throwable t) {
-                networkCallBack.onFailure("Failed to fetch countries");
-            }
-        });
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(countryResponse -> {
+                            List<Country> countries = countryResponse.getAreaNames();
+                            if (countries != null) {
+                                networkCallBack.countryOnSuccess(countries);
+                            }
+                        },
+                        e -> networkCallBack.onFailure("Failed to fetch countries"));
     }
 
 
