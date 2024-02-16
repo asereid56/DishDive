@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,11 +32,13 @@ import com.example.dishdive.plan.presenter.PlanPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 
 public class PlanFragment extends Fragment implements PlanView, OnPlanClickListener {
     PlanPresenter planPresenter;
     private RecyclerView recyclerView;
-    private LiveData<List<Meal>> planMeals;
     private PlanAdapter planAdapter;
     private SharedPreferences preferences;
 
@@ -62,39 +63,36 @@ public class PlanFragment extends Fragment implements PlanView, OnPlanClickListe
         } else {
             showLoginDialog();
         }
-
     }
 
     private void setupPlannedFragmentFragment() {
         planPresenter = new PlanPresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()));
         recyclerView = getView().findViewById(R.id.recycleView);
 
-        // Initialize LinearLayoutManager with vertical orientation
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         planAdapter = new PlanAdapter(getContext(), new ArrayList<>(), this);
 
-        // Set the layout manager to RecyclerView
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(planAdapter);
 
-        try {
-            planMeals = planPresenter.getPlanLiveData();
-            planMeals.observe(getViewLifecycleOwner(), new Observer<List<Meal>>() {
-                @Override
-                public void onChanged(List<Meal> meals) {
-                    showPlanMeal(meals);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Failed to Load Meals", Toast.LENGTH_SHORT).show();
-        }
+        planPresenter.getPlanLiveData()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::updatePlanMeals,
+                        e -> {
+                            Toast.makeText(getContext(), "Nothing to show", Toast.LENGTH_SHORT).show();
+                        });
         planAdapter.setOnItemClickListener(new PlanAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Meal meal) {
                 navigateToDetailsFragment(meal);
             }
         });
+    }
+
+    public void updatePlanMeals(List<Meal> meals) {
+        planAdapter.setMeals(meals);
+        planAdapter.notifyDataSetChanged();
     }
 
 

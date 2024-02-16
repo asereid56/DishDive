@@ -35,10 +35,14 @@ import com.example.dishdive.network.meal.MealRemoteDataSource;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class FavouriteFragment extends Fragment implements FavouriteView, OnFavClickListener {
     private FavouritePresenter favouritePresenter;
     private RecyclerView recyclerView;
-    private LiveData<List<Meal>> favMeal;
+    private Flowable<List<Meal>> favMeal;
     private FavouriteAdapter favouriteAdapter;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private SharedPreferences preferences;
@@ -77,20 +81,15 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavC
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setAdapter(favouriteAdapter);
 
-        try {
-            favMeal = favouritePresenter.showFavMeals();
-            favMeal.observe(getViewLifecycleOwner(), new Observer<List<Meal>>() {
-                @Override
-                public void onChanged(List<Meal> meals) {
-//                    favouriteAdapter.setMeals(meals);
-//                    favouriteAdapter.notifyDataSetChanged();
-                    showFavMeal(meals);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Failed to Load Meals", Toast.LENGTH_SHORT).show();
-        }
+        favouritePresenter.showFavMeals()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        this::updateFavProduct,
+                        e -> {
+                            Toast.makeText(getContext(), "Nothing to Show", Toast.LENGTH_SHORT).show();
+                        }
+                );
         favouriteAdapter.OnItemClickListenerToDetails(new FavouriteAdapter.OnItemClickListenerToDetails() {
             @Override
             public void onItemClick(Meal meal) {
@@ -99,6 +98,11 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavC
                 }
             }
         });
+    }
+
+    public void updateFavProduct(List<Meal> meals) {
+        favouriteAdapter.setMeals(meals);
+        favouriteAdapter.notifyDataSetChanged();
     }
 
     private void showLoginDialog() {

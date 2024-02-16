@@ -1,20 +1,19 @@
 package com.example.dishdive.db;
 
 import android.content.Context;
-import android.util.Log;
-
-import androidx.lifecycle.LiveData;
 
 import com.example.dishdive.model.Meal;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Flowable;
 
 public class MealLocalDataSource {
     String email;
     Context context;
     private static MealLocalDataSource mealLocalDataSource = null;
     private MealDao mealDao;
-    private LiveData<List<Meal>> listLiveMeals;
+    private Flowable<List<Meal>> mealList;
 
     public static MealLocalDataSource getInstance(Context context) {
         if (mealLocalDataSource == null) {
@@ -27,10 +26,10 @@ public class MealLocalDataSource {
         this.context = context;
         MealDataBase db = MealDataBase.getInstance(context.getApplicationContext());
         mealDao = db.getMealDao();
-        listLiveMeals = mealDao.getFavMeal(email);
+        mealList = mealDao.getFavMeal(email);
     }
 
-    public LiveData<List<Meal>> getListLiveFavMeals(String email) {
+    public Flowable<List<Meal>> getListFavMeals(String email) {
         return mealDao.getFavMeal(email);
     }
 
@@ -72,7 +71,7 @@ public class MealLocalDataSource {
         }).start();
     }
 
-    public LiveData<List<Meal>> getListLivePlanMeals(String email) {
+    public Flowable<List<Meal>> getListPlanMeals(String email) {
         return mealDao.getPlannedMeals(email);
     }
 }

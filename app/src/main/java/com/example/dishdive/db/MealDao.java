@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.dishdive.model.Meal;
+import io.reactivex.rxjava3.core.Flowable;
 
 import java.util.List;
 
@@ -20,9 +21,9 @@ public interface MealDao {
     public void deleteMeal(Meal meal);
 
     @Query("SELECT * FROM mealInformation WHERE dbType = 'Fav' AND email = :userEmail")
-    LiveData<List<Meal>> getFavMeal(String userEmail);
+    Flowable<List<Meal>> getFavMeal(String userEmail);
 
     @Query("SELECT * FROM mealInformation WHERE dbType ='Plan' AND email = :userEmail")
-    LiveData<List<Meal>> getPlannedMeals(String userEmail);
+    Flowable<List<Meal>> getPlannedMeals(String userEmail);
 
 }

@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Flowable;
+
 public class FavouritePresenter {
     String email;
     FirebaseAuth auth;
@@ -25,7 +27,7 @@ public class FavouritePresenter {
         this.repository = repository;
     }
 
-    public LiveData<List<Meal>> showFavMeals() {
+    public Flowable<List<Meal>> showFavMeals() {
         return repository.getStoredFavMeal(email);
     }
 

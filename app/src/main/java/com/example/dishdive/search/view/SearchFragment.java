@@ -92,14 +92,23 @@ public class SearchFragment extends Fragment implements SearchView {
                 if (chip != null) {
                     String chipText = chip.getText().toString();
                     if (chipText.equals("Category")) {
+                        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                        recyclerView.setLayoutManager(layoutManager);
+
                         categoryAdapter.notifyDataSetChanged();
                         categoryAdapter.setCategories(categoryAdapter.categories);
                         recyclerView.setAdapter(categoryAdapter);
                     } else if (chipText.equals("Country")) {
+                        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                        recyclerView.setLayoutManager(layoutManager);
+
                         countryAdapter.notifyDataSetChanged();
                         countryAdapter.setCountries(countryAdapter.countries);
                         recyclerView.setAdapter(countryAdapter);
                     } else if (chipText.equals("Ingredient")) {
+                        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                        recyclerView.setLayoutManager(layoutManager);
+
                         ingredientAdapter.notifyDataSetChanged();
                         ingredientAdapter.setIngredients(ingredientAdapter.ingredients);
                         recyclerView.setAdapter(ingredientAdapter);
@@ -185,7 +194,7 @@ public class SearchFragment extends Fragment implements SearchView {
                     });
                 })
                 .subscribeOn(Schedulers.io())
-                .debounce(500, TimeUnit.MILLISECONDS)
+                .debounce(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mealName ->  searchPresenter.searchMealByName(mealName));
 

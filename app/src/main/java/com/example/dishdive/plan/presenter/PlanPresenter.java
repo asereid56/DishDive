@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Flowable;
+
 public class PlanPresenter {
     MealRepository mealRepository;
     PlanView planView;
@@ -25,7 +27,7 @@ public class PlanPresenter {
         this.planView = planView;
     }
 
-    public LiveData<List<Meal>> getPlanLiveData() {
+    public Flowable<List<Meal>> getPlanLiveData() {
 
         return mealRepository.getStoredPlannedMeals(email);
     }

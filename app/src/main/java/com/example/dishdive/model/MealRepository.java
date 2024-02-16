@@ -17,6 +17,8 @@ import com.example.dishdive.network.meal.NetworkCallbackAreaMeals;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Flowable;
+
 public class MealRepository {
     MealRemoteDataSource mealRemoteDataSource;
     MealLocalDataSource mealLocalDataSource;
@@ -83,8 +85,8 @@ public class MealRepository {
         mealLocalDataSource.deleteFromFav(meal);
     }
 
-    public LiveData<List<Meal>> getStoredFavMeal(String email) {
-        return mealLocalDataSource.getListLiveFavMeals(email);
+    public Flowable<List<Meal>> getStoredFavMeal(String email) {
+        return mealLocalDataSource.getListFavMeals(email);
     }
 
 
@@ -96,7 +98,7 @@ public class MealRepository {
         mealLocalDataSource.deleteFromPlan(meal);
     }
 
-    public LiveData<List<Meal>> getStoredPlannedMeals(String email) {
-        return mealLocalDataSource.getListLivePlanMeals(email);
+    public Flowable<List<Meal>> getStoredPlannedMeals(String email) {
+        return mealLocalDataSource.getListPlanMeals(email);
     }
 }
