@@ -16,7 +16,7 @@ import com.example.dishdive.model.Meal;
 
 import java.util.List;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder>{
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> {
     List<Meal> meals;
     MyViewHolder holder;
     Context context;
@@ -48,20 +48,21 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         this.holder = holder;
         Meal meal = meals.get(position);
-        holder.ingredientName.setText(meal.getStrMeal());
-        Glide.with(this.context).load(meals.get(position).getStrMealThumb().toString()).into(holder.img);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    int position = holder.getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(meals.get(position));
+        if (meal != null) {
+            holder.ingredientName.setText(meal.getStrMeal());
+            Glide.with(this.context).load(meals.get(position).getStrMealThumb().toString()).into(holder.img);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = holder.getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(meals.get(position));
+                        }
                     }
                 }
-            }
-        });
-
+            });
+        }
     }
 
     @Override
@@ -82,7 +83,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             view = itemView;
-            ingredientName = view.findViewById(R.id.countryItem);
+            ingredientName = view.findViewById(R.id.categoryName);
             img = view.findViewById(R.id.categoryimg);
         }
     }

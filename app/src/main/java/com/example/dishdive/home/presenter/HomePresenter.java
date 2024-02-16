@@ -1,6 +1,7 @@
 package com.example.dishdive.home.presenter;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
@@ -55,9 +56,7 @@ public class HomePresenter implements NetworkCallBackRandomMeal, NetworkCallBack
 
     @Override
     public void onFailure(String msg) {
-        Toast.makeText(context,
-                msg,
-                Toast.LENGTH_SHORT).show();
+        Log.i("TAG", "onFailure: " + msg);
     }
 }
 

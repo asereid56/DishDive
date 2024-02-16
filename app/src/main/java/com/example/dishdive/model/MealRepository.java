@@ -112,8 +112,13 @@ public class MealRepository {
     public void getMealsByName(String nameOfMeal, NetworkCallBackSearchByName networkCallBack) {
         mealRemoteDataSource.makeNetworkCallForSearchByName(nameOfMeal, new NetworkCallBackSearchByName() {
             @Override
-            public void mealOnSuccess(List<Meal> meals) {
-                networkCallBack.mealOnSuccess(meals);
+            public void mealOnSuccess(List<Meal> meal) {
+                if(meal!= null){
+                    networkCallBack.mealOnSuccess(meal);
+                }else{
+                    networkCallBack.mealOnSuccess(null);
+                }
+
             }
 
             @Override

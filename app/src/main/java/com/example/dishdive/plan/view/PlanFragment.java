@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class PlanFragment extends Fragment implements PlanView,OnPlanClickListener{
+public class PlanFragment extends Fragment implements PlanView, OnPlanClickListener {
     PlanPresenter planPresenter;
     private RecyclerView recyclerView;
     private LiveData<List<Meal>> planMeals;
@@ -63,6 +64,7 @@ public class PlanFragment extends Fragment implements PlanView,OnPlanClickListen
         }
 
     }
+
     private void setupPlannedFragmentFragment() {
         planPresenter = new PlanPresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()));
         recyclerView = getView().findViewById(R.id.recycleView);
@@ -134,6 +136,7 @@ public class PlanFragment extends Fragment implements PlanView,OnPlanClickListen
         planAdapter.notifyDataSetChanged();
 
     }
+
     private void navigateToDetailsFragment(Meal meal) {
         PlanFragmentDirections.ActionPlanFragmentToDetailsMealFragment action =
                 PlanFragmentDirections.actionPlanFragmentToDetailsMealFragment(

@@ -9,13 +9,18 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 
 import com.example.dishdive.R;
-import com.example.dishdive.categorymeals.view.CategoryMealsFragmentDirections;
 import com.example.dishdive.db.MealLocalDataSource;
 import com.example.dishdive.model.Category;
 import com.example.dishdive.model.Country;
@@ -28,7 +33,17 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableOnSubscribe;
+
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 
 public class SearchFragment extends Fragment implements SearchView {
 
@@ -40,6 +55,7 @@ public class SearchFragment extends Fragment implements SearchView {
     IngredientAdapter ingredientAdapter;
     SearchAdapter searchAdapter;
     ChipGroup chipGroup;
+    private Disposable disposable;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +74,7 @@ public class SearchFragment extends Fragment implements SearchView {
         recyclerView = view.findViewById(R.id.recycleView);
         searchText = view.findViewById(R.id.searchText);
 
-        searchPresenter = new SearchPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()), this);
+        searchPresenter = new SearchPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()), this , getContext());
 
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
@@ -66,7 +82,7 @@ public class SearchFragment extends Fragment implements SearchView {
         categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>());
         countryAdapter = new CountryAdapter(getContext(), new ArrayList<>());
         ingredientAdapter = new IngredientAdapter(getContext(), new ArrayList<>());
-        searchAdapter = new SearchAdapter(getContext(),new ArrayList<>());
+        searchAdapter = new SearchAdapter(getContext(), new ArrayList<>());
 
         chipGroup = view.findViewById(R.id.chipGroup);
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
@@ -76,11 +92,15 @@ public class SearchFragment extends Fragment implements SearchView {
                 if (chip != null) {
                     String chipText = chip.getText().toString();
                     if (chipText.equals("Category")) {
-                        recyclerView.setAdapter(categoryAdapter);
+                        categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>());
+                        recyclerView.swapAdapter(categoryAdapter ,true );
                     } else if (chipText.equals("Country")) {
-                        recyclerView.setAdapter(countryAdapter);
+                        countryAdapter = new CountryAdapter(getContext(), new ArrayList<>());
+                        recyclerView.swapAdapter(countryAdapter ,true );
                     } else if (chipText.equals("Ingredient")) {
-                        recyclerView.setAdapter(ingredientAdapter);
+                       ingredientAdapter = new IngredientAdapter(getContext(), new ArrayList<>());
+                        //recyclerView.setAdapter(ingredientAdapter);
+                        recyclerView.swapAdapter(ingredientAdapter ,true );
                     }
                     searchPresenter.onChipSelected(chipText);
                 }
@@ -113,9 +133,77 @@ public class SearchFragment extends Fragment implements SearchView {
             }
         });
     }
-    private void setupEditSearch(){
+
+    private void setupEditSearch() {
+        searchText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    chipGroup.setVisibility(View.INVISIBLE);
+                } else {
+                    if (searchText.getText().toString().trim().isEmpty()) {
+                        chipGroup.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+        searchText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (searchText.getText().toString().trim().isEmpty()) {
+                        chipGroup.setVisibility(View.VISIBLE);
+                    }
+                }
+                return false;
+            }
+        });
+
+
+        disposable = Observable.create((ObservableOnSubscribe<String>) emitter -> {
+                    searchText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            String mealName = s.toString().trim();
+                            if(!mealName.isEmpty()){
+                                emitter.onNext(mealName);
+                            }else{
+                                searchAdapter.setMeals(new ArrayList<>());
+                                searchAdapter.notifyDataSetChanged();
+                            }
+                        }
+                    });
+                })
+                .subscribeOn(Schedulers.io())
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mealName ->  searchPresenter.searchMealByName(mealName));
 
     }
+
+
+    @Override
+    public void showMealsByName(List<Meal> meals) {
+//        searchAdapter.setMeals(meals);
+//        recyclerView.setAdapter(searchAdapter);
+        if (searchText.getText().toString().trim().isEmpty()) {
+            chipGroup.setVisibility(View.VISIBLE);
+            recyclerView.swapAdapter(searchAdapter, true);
+        } else {
+            chipGroup.setVisibility(View.INVISIBLE);
+            searchAdapter.setMeals(meals);
+            recyclerView.setAdapter(searchAdapter);
+        }
+    }
+
 
     private void navigateToDetailsMealFragment(Meal meal) {
         if (meal != null) {
@@ -146,11 +234,6 @@ public class SearchFragment extends Fragment implements SearchView {
     @Override
     public void showIngredients(List<Ingredient> ingredients) {
         ingredientAdapter.setIngredients(ingredients);
-    }
-
-    @Override
-    public void showMealsByName(List<Meal> meals) {
-
     }
 
     private void navigateToCategoryMealsFragment(Category category) {

@@ -18,6 +18,11 @@ import com.example.dishdive.model.PopularMealResponse;
 
 import java.util.List;
 
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
+import io.reactivex.Observable;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,7 +49,9 @@ public class MealRemoteDataSource {
 
         OkHttpClient client = httpClient.build();
 
-        retrofit = new Retrofit.Builder().client(client).addConverterFactory(GsonConverterFactory.create()).baseUrl(BASE_URL).build();
+        retrofit = new Retrofit.Builder().client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create()).baseUrl(BASE_URL).build();
         mealsServices = retrofit.create(MealsServices.class);
     }
 
@@ -56,28 +63,18 @@ public class MealRemoteDataSource {
     }
 
     public void makeNetworkCallForDailyMail(NetworkCallBackRandomMeal networkCallBack) {
-        Call<MealResponse> call = mealsServices.getRandomMealForADay();
-        call.enqueue(new Callback<MealResponse>() {
-            @Override
-            public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Meal> meals = response.body().getMeals();
-                    if (meals != null && !meals.isEmpty()) {
-                        Meal meal = meals.get(0);
-                        networkCallBack.dealyMealOnSuccess(meal);
-                    } else {
-                        networkCallBack.onFailure("No meals found");
-                    }
-                } else {
-                    networkCallBack.onFailure("Failed to fetch meals");
-                }
-            }
+        Single<MealResponse> observable = mealsServices.getRandomMealForADay();
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (PopularMealResponse) -> {
+                            networkCallBack.dealyMealOnSuccess(PopularMealResponse.getMeals().get(0));
+                        },
+                        e -> {
+                            networkCallBack.onFailure(e.toString());
+                        }
+                );
 
-            @Override
-            public void onFailure(Call<MealResponse> call, Throwable t) {
-                networkCallBack.onFailure("failed to load meal");
-            }
-        });
     }
 
     public void makeNetworkCallForPopularMeal(NetworkCallBackPopularMeal networkCallBack) {
@@ -183,9 +180,14 @@ public class MealRemoteDataSource {
             @Override
             public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Meal> meals = response.body().getMeals();
-                    if (meals != null && !meals.isEmpty()) {
+                    List<Meal> meals = null;
+                    if (response.body().getMeals() != null) {
+                        meals = response.body().getMeals();
+                    }
+                    if (meals != null) {
                         networkCallBack.mealOnSuccess(meals);
+                    } else {
+                        networkCallBack.mealOnSuccess(null);
                     }
                 }
             }

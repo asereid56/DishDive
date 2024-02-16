@@ -1,6 +1,7 @@
 package com.example.dishdive.search.presenter;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.dishdive.model.Category;
@@ -16,6 +17,7 @@ import com.example.dishdive.network.meal.NetworkCallBackSearchByName;
 import com.example.dishdive.network.meal.NetworkCallbackAreaMeals;
 import com.example.dishdive.search.view.SearchView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchPresenter implements NetworkCallBackCategories, NetworkCallBackCountries, NetworkCallBackIngredients , NetworkCallBackSearchByName {
@@ -23,9 +25,10 @@ public class SearchPresenter implements NetworkCallBackCategories, NetworkCallBa
     SearchView view;
     Context context;
 
-    public SearchPresenter(MealRepository mealRepository, SearchView view) {
+    public SearchPresenter(MealRepository mealRepository, SearchView view , Context context) {
         this.mealRepository = mealRepository;
         this.view = view;
+        this.context = context;
     }
 
     public void onChipSelected(String chipText) {
@@ -52,10 +55,19 @@ public class SearchPresenter implements NetworkCallBackCategories, NetworkCallBa
     public void getAllIngredientsOnSuccess(List<Ingredient> ingredients) {
         view.showIngredients(ingredients);
     }
+    public void searchMealByName(String mealName) {
+        mealRepository.getMealsByName(mealName, this);
 
+    }
     @Override
-    public void mealOnSuccess(List<Meal> meals) {
-        view.showMealsByName(meals);
+    public void mealOnSuccess(List<Meal> meal) {
+        if (meal != null) {
+            view.showMealsByName(meal);
+        } else {
+            Toast.makeText(context, "No Meal Found", Toast.LENGTH_SHORT).show();
+            view.showMealsByName(new ArrayList<>());
+        }
+
     }
 
     @Override
