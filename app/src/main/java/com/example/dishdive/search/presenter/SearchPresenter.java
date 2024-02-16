@@ -6,17 +6,19 @@ import android.widget.Toast;
 import com.example.dishdive.model.Category;
 import com.example.dishdive.model.Country;
 import com.example.dishdive.model.Ingredient;
+import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealRepository;
 import com.example.dishdive.model.PopularMeal;
 import com.example.dishdive.network.meal.NetworkCallBackCategories;
 import com.example.dishdive.network.meal.NetworkCallBackCountries;
 import com.example.dishdive.network.meal.NetworkCallBackIngredients;
+import com.example.dishdive.network.meal.NetworkCallBackSearchByName;
 import com.example.dishdive.network.meal.NetworkCallbackAreaMeals;
 import com.example.dishdive.search.view.SearchView;
 
 import java.util.List;
 
-public class SearchPresenter implements NetworkCallBackCategories, NetworkCallBackCountries, NetworkCallBackIngredients {
+public class SearchPresenter implements NetworkCallBackCategories, NetworkCallBackCountries, NetworkCallBackIngredients , NetworkCallBackSearchByName {
     MealRepository mealRepository;
     SearchView view;
     Context context;
@@ -49,6 +51,11 @@ public class SearchPresenter implements NetworkCallBackCategories, NetworkCallBa
     @Override
     public void getAllIngredientsOnSuccess(List<Ingredient> ingredients) {
         view.showIngredients(ingredients);
+    }
+
+    @Override
+    public void mealOnSuccess(List<Meal> meals) {
+        view.showMealsByName(meals);
     }
 
     @Override

@@ -157,6 +157,46 @@ public class MealRemoteDataSource {
         });
     }
 
+    public void makeNetworkCallForIngredientsMeals(String ingredientName, NetworkCallBackIngredientsMeals networkCallBack) {
+        Call<PopularMealResponse> call = mealsServices.getIngredientsMeals(ingredientName);
+        call.enqueue(new Callback<PopularMealResponse>() {
+            @Override
+            public void onResponse(Call<PopularMealResponse> call, Response<PopularMealResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<PopularMeal> popularMeals = response.body().getMeals();
+                    if (popularMeals != null && !popularMeals.isEmpty()) {
+                        networkCallBack.ingredientsMealsOnSuccess(popularMeals);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PopularMealResponse> call, Throwable t) {
+                networkCallBack.onFailure("Failed to load Meals");
+            }
+        });
+    }
+
+    public void makeNetworkCallForSearchByName(String nameOfMeal, NetworkCallBackSearchByName networkCallBack) {
+        Call<MealResponse> call = mealsServices.getMealsByName(nameOfMeal);
+        call.enqueue(new Callback<MealResponse>() {
+            @Override
+            public void onResponse(Call<MealResponse> call, Response<MealResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Meal> meals = response.body().getMeals();
+                    if (meals != null && !meals.isEmpty()) {
+                        networkCallBack.mealOnSuccess(meals);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MealResponse> call, Throwable t) {
+                networkCallBack.onFailure("Failed to Load Meals");
+            }
+        });
+    }
+
     public void makeNetworkCallForCategoryMeals(String categoryName, NetworkCallBackCategoryMeals networkCallBack) {
         Call<PopularMealResponse> call = mealsServices.getCategoryMeals(categoryName);
         call.enqueue(new Callback<PopularMealResponse>() {
@@ -216,5 +256,6 @@ public class MealRemoteDataSource {
             }
         });
     }
+
 
 }

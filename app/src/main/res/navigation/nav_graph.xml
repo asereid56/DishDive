@@ -96,6 +96,9 @@
         <action
             android:id="@+id/action_searchFragment_to_ingredientsMealsFragment"
             app:destination="@id/ingredientsMealsFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_detailsMealFragment"
+            app:destination="@id/detailsMealFragment" />
     </fragment>
     <fragment
         android:id="@+id/categoryMealsFragment"
@@ -129,7 +132,7 @@
     </fragment>
     <fragment
         android:id="@+id/ingredientsMealsFragment"
-        android:name="com.example.dishdive.IngredientsMealsFragment"
+        android:name="com.example.dishdive.ingredientmeals.view.IngredientsMealsFragment"
         android:label="fragment_ingredients_meals"
         tools:layout="@layout/fragment_ingredients_meals" >
         <action

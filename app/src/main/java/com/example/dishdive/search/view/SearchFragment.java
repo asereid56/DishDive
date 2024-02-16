@@ -12,12 +12,15 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.example.dishdive.R;
+import com.example.dishdive.categorymeals.view.CategoryMealsFragmentDirections;
 import com.example.dishdive.db.MealLocalDataSource;
 import com.example.dishdive.model.Category;
 import com.example.dishdive.model.Country;
 import com.example.dishdive.model.Ingredient;
+import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealRepository;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
 import com.example.dishdive.search.presenter.SearchPresenter;
@@ -30,10 +33,12 @@ import java.util.List;
 public class SearchFragment extends Fragment implements SearchView {
 
     private RecyclerView recyclerView;
+    EditText searchText;
     SearchPresenter searchPresenter;
     CategoryAdapter categoryAdapter;
     CountryAdapter countryAdapter;
     IngredientAdapter ingredientAdapter;
+    SearchAdapter searchAdapter;
     ChipGroup chipGroup;
 
     @Override
@@ -51,6 +56,7 @@ public class SearchFragment extends Fragment implements SearchView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recycleView);
+        searchText = view.findViewById(R.id.searchText);
 
         searchPresenter = new SearchPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()), this);
 
@@ -60,7 +66,7 @@ public class SearchFragment extends Fragment implements SearchView {
         categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>());
         countryAdapter = new CountryAdapter(getContext(), new ArrayList<>());
         ingredientAdapter = new IngredientAdapter(getContext(), new ArrayList<>());
-        // recyclerView.setAdapter(categoryAdapter);
+        searchAdapter = new SearchAdapter(getContext(),new ArrayList<>());
 
         chipGroup = view.findViewById(R.id.chipGroup);
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
@@ -80,6 +86,8 @@ public class SearchFragment extends Fragment implements SearchView {
                 }
             }
         });
+        setupEditSearch();
+
         categoryAdapter.setOnItemClickListener(new CategoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Category category) {
@@ -92,6 +100,37 @@ public class SearchFragment extends Fragment implements SearchView {
                 navigateToAreaMealsFragment(country);
             }
         });
+        ingredientAdapter.setOnItemClickListener(new IngredientAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Ingredient ingredient) {
+                navigateToIngredientMealsFragment(ingredient);
+            }
+        });
+        searchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Meal meal) {
+                navigateToDetailsMealFragment(meal);
+            }
+        });
+    }
+    private void setupEditSearch(){
+
+    }
+
+    private void navigateToDetailsMealFragment(Meal meal) {
+        if (meal != null) {
+            SearchFragmentDirections.ActionSearchFragmentToDetailsMealFragment action =
+                    SearchFragmentDirections.actionSearchFragmentToDetailsMealFragment(
+                            meal.getIdMeal(), meal.getStrMeal(), meal.getStrMealThumb());
+
+            NavHostFragment.findNavController(this).navigate(action);
+        }
+    }
+
+    private void navigateToIngredientMealsFragment(Ingredient ingredient) {
+        SearchFragmentDirections.ActionSearchFragmentToIngredientsMealsFragment action =
+                SearchFragmentDirections.actionSearchFragmentToIngredientsMealsFragment(ingredient.getStrIngredient());
+        NavHostFragment.findNavController(this).navigate(action);
     }
 
     @Override
@@ -107,6 +146,11 @@ public class SearchFragment extends Fragment implements SearchView {
     @Override
     public void showIngredients(List<Ingredient> ingredients) {
         ingredientAdapter.setIngredients(ingredients);
+    }
+
+    @Override
+    public void showMealsByName(List<Meal> meals) {
+
     }
 
     private void navigateToCategoryMealsFragment(Category category) {

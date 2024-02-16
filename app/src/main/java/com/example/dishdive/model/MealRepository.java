@@ -11,8 +11,10 @@ import com.example.dishdive.network.meal.NetworkCallBackCategoryMeals;
 import com.example.dishdive.network.meal.NetworkCallBackCountries;
 import com.example.dishdive.network.meal.NetworkCallBackDetailsOfMeal;
 import com.example.dishdive.network.meal.NetworkCallBackIngredients;
+import com.example.dishdive.network.meal.NetworkCallBackIngredientsMeals;
 import com.example.dishdive.network.meal.NetworkCallBackPopularMeal;
 import com.example.dishdive.network.meal.NetworkCallBackRandomMeal;
+import com.example.dishdive.network.meal.NetworkCallBackSearchByName;
 import com.example.dishdive.network.meal.NetworkCallbackAreaMeals;
 
 import java.util.List;
@@ -55,7 +57,6 @@ public class MealRepository {
             @Override
             public void getAllIngredientsOnSuccess(List<Ingredient> ingredients) {
                 networkCallBackIngredients.getAllIngredientsOnSuccess(ingredients);
-              //  Log.i("Ingredients in repoo", "getAllIngredientsOnSuccess: " + ingredients.get(0));
             }
 
             @Override
@@ -93,6 +94,35 @@ public class MealRepository {
             }
         });
     }
+
+    public void getMealsOfIngredients(String ingredientName, NetworkCallBackIngredientsMeals networkCallBack) {
+        mealRemoteDataSource.makeNetworkCallForIngredientsMeals(ingredientName, new NetworkCallBackIngredientsMeals() {
+            @Override
+            public void ingredientsMealsOnSuccess(List<PopularMeal> meal) {
+                networkCallBack.ingredientsMealsOnSuccess(meal);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                networkCallBack.onFailure(msg);
+            }
+        });
+    }
+
+    public void getMealsByName(String nameOfMeal, NetworkCallBackSearchByName networkCallBack) {
+        mealRemoteDataSource.makeNetworkCallForSearchByName(nameOfMeal, new NetworkCallBackSearchByName() {
+            @Override
+            public void mealOnSuccess(List<Meal> meals) {
+                networkCallBack.mealOnSuccess(meals);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                networkCallBack.onFailure(msg);
+            }
+        });
+    }
+
 
     public void getMealsOfArea(String areaName, NetworkCallbackAreaMeals networkCallbackAreaMeals) {
         mealRemoteDataSource.makeNetworkCallForAreaMeals(areaName, new NetworkCallbackAreaMeals() {
