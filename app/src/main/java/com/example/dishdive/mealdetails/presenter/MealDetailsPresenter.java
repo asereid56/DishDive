@@ -22,25 +22,26 @@ public class MealDetailsPresenter implements NetworkCallBackDetailsOfMeal {
     MealDetailsView view;
     Context context;
 
-    public MealDetailsPresenter (DetailsMealFragment detailsMealFragment , MealRepository mealRepository){
+    public MealDetailsPresenter(DetailsMealFragment detailsMealFragment, MealRepository mealRepository) {
         this.view = detailsMealFragment;
-        this.mealRepository =  mealRepository;
+        this.mealRepository = mealRepository;
     }
 
-    public void getMealDetails(String id){
-        mealRepository.getDetailsOfMeal(id , this);
+    public void getMealDetails(String id) {
+        mealRepository.getDetailsOfMeal(id, this);
     }
 
     @Override
     public void getMealDetailsOnSuccess(Meal meal) {
-       view.setMealDetails(meal);
+        view.setMealDetails(meal);
     }
 
     @Override
     public void onFailure(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
-    public void addToFav(Meal meal){
+
+    public void addToFav(Meal meal) {
         mealRepository.insertMealToFav(meal);
     }
 

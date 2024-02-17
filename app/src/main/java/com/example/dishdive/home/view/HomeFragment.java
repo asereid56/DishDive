@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,10 +56,12 @@ public class HomeFragment extends Fragment implements HomeView {
         recyclerView = view.findViewById(R.id.popularRecycleView);
         btnSearch = view.findViewById(R.id.btnSearch);
 
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+//        linearLayoutManager = new LinearLayoutManager(getContext());
+//        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(staggeredGridLayoutManager);
         popularAdapter = new MostPopularAdapter(getContext(), new ArrayList<>());
-        recyclerView.setLayoutManager(linearLayoutManager);
+      //  recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(popularAdapter);
 
         presenter.getRandomDailyMeal();
