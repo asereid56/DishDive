@@ -125,6 +125,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
     }
 
     private void getInformationOfMealFromTheArgs() {
+
         DetailsMealFragmentArgs args = DetailsMealFragmentArgs.fromBundle(getArguments());
         mealName = args.getMealName();
         mealID = args.getMealID();
