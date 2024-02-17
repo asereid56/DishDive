@@ -1,5 +1,6 @@
 package com.example.dishdive.areameals.view;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -60,8 +61,8 @@ public class AreaMealsFragment extends Fragment implements AreaMealView {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recycleView);
         getInformationOfAreaFromTheArgs();
-        presenter = new AreaMealsPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()) , this);
-
+        Context applicationContext = requireContext().getApplicationContext();
+        presenter = new AreaMealsPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)) , this);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         areaMealsAdapter = new AreaMealsAdapter(getContext(), new ArrayList<>());

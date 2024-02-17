@@ -52,14 +52,10 @@ public class ProfileFragment extends Fragment {
 
         preferences = getActivity().getSharedPreferences("AuthState", Context.MODE_PRIVATE);
         if (preferences.getBoolean("isLoggedIn", false)) {
-            // User is logged in, show his profile
             setupProfileFragment();
         } else {
-            // User is not logged in, show custom dialog
             showLoginDialog();
         }
-
-
     }
 
     private void setupProfileFragment() {

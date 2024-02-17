@@ -64,7 +64,7 @@ public class SearchPresenter implements NetworkCallBackCategories, NetworkCallBa
         if (meal != null) {
             view.showMealsByName(meal);
         } else {
-            Toast.makeText(context, "No Meal Found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "No Meals Founded", Toast.LENGTH_SHORT).show();
             view.showMealsByName(new ArrayList<>());
         }
 
@@ -73,7 +73,7 @@ public class SearchPresenter implements NetworkCallBackCategories, NetworkCallBa
     @Override
     public void onFailure(String msg) {
         Toast.makeText(context,
-                "Failed to load meal: " + msg,
+                 msg,
                 Toast.LENGTH_SHORT).show();
     }
 }

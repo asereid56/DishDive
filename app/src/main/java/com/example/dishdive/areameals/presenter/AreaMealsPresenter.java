@@ -28,7 +28,7 @@ public class AreaMealsPresenter implements NetworkCallbackAreaMeals {
     @Override
     public void onFailure(String msg) {
         Toast.makeText(context,
-                "Failed to load meal: " + msg,
+                 msg,
                 Toast.LENGTH_SHORT).show();
     }
     public void fetchCategoryMeals(String name) {

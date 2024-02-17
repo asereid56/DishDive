@@ -56,7 +56,7 @@ public class HomePresenter implements NetworkCallBackRandomMeal, NetworkCallBack
 
     @Override
     public void onFailure(String msg) {
-        Log.i("TAG", "onFailure: " + msg);
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 }
 

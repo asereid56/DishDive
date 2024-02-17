@@ -1,5 +1,6 @@
 package com.example.dishdive.categorymeals.view;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -47,12 +48,14 @@ public class CategoryMealsFragment extends Fragment implements CategoryMealsView
         recyclerView = view.findViewById(R.id.recycleView);
         getInformationOfCategoryFromTheArgs();
 
-        presenter = new CategoryMealsPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()), this);
+        Context applicationContext = requireContext().getApplicationContext();
+        presenter = new CategoryMealsPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)), this);
 
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         categoryMealsAdapter = new CategoryMealsAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(categoryMealsAdapter);
+
         presenter.fetchCategoryMeals(category);
         categoryMealsAdapter.setOnItemClickListener(new CategoryMealsAdapter.OnItemClickListener() {
             @Override

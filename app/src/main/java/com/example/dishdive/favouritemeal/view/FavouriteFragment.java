@@ -58,22 +58,15 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavC
         super.onViewCreated(view, savedInstanceState);
         preferences = getActivity().getSharedPreferences("AuthState", Context.MODE_PRIVATE);
         if (preferences.getBoolean("isLoggedIn", false)) {
-            // User is logged in, show favorite meals
             setupFavouriteFragment();
         } else {
-            // User is not logged in, show custom dialog
             showLoginDialog();
         }
-//        favouriteAdapter.OnItemClickListenerToDetails(new FavouriteAdapter.OnItemClickListenerToDetails() {
-//            @Override
-//            public void onItemClick(Meal meal) {
-//                navigateToDetailsFragment(meal);
-//            }
-//        });
     }
 
     private void setupFavouriteFragment() {
-        favouritePresenter = new FavouritePresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()));
+        Context applicationContext = requireContext().getApplicationContext();
+        favouritePresenter = new FavouritePresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)));
         recyclerView = getView().findViewById(R.id.recycleView);
 
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

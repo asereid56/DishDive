@@ -41,7 +41,6 @@ public class RegisterScreen extends AppCompatActivity implements RegisterView, O
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //   String userName = name.getText().toString().trim();
                 String userEmail = email.getText().toString().trim();
                 String userPassword = password.getText().toString().trim();
                 String userConfirmPassword = confirmPass.getText().toString().trim();
@@ -97,7 +96,7 @@ public class RegisterScreen extends AppCompatActivity implements RegisterView, O
     }
 
     private boolean isValidEmail(String email) {
-        // Regular expression for validating email addresses
+        // validating email
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return email.matches(emailRegex);
     }

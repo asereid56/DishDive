@@ -1,5 +1,6 @@
 package com.example.dishdive.ingredientmeals.view;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -49,7 +50,9 @@ public class IngredientsMealsFragment extends Fragment implements IngredientMeal
         recyclerView = view.findViewById(R.id.recycleView);
         getArgsFromSearchFragment();
 
-        presenter = new IngredientMealsPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()), this);
+        Context applicationContext = requireContext().getApplicationContext();
+        presenter = new IngredientMealsPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)), this);
+
         ingredientsMealsAdapter = new IngredientsMealsAdapter(getContext(), new ArrayList<>());
 
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

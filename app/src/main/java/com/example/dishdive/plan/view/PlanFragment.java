@@ -10,7 +10,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,7 +65,8 @@ public class PlanFragment extends Fragment implements PlanView, OnPlanClickListe
     }
 
     private void setupPlannedFragmentFragment() {
-        planPresenter = new PlanPresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()));
+        Context applicationContext = requireContext().getApplicationContext();
+        planPresenter = new PlanPresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)));
         recyclerView = getView().findViewById(R.id.recycleView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -125,7 +125,34 @@ public class PlanFragment extends Fragment implements PlanView, OnPlanClickListe
     public void OnMealsPlanDeleteListener(Meal meal) {
         Toast.makeText(getContext(), "Removed", Toast.LENGTH_SHORT).show();
         planPresenter.deleteFromPlanMeals(meal);
-        DetailsMealFragment.isDayAdded = false;
+        updateDayFlags(meal.getDay());
+
+    }
+
+    private void updateDayFlags(String day) {
+        switch (day) {
+            case "Saturday":
+                DetailsMealFragment.addedToSaturday = false;
+                break;
+            case "Sunday":
+                DetailsMealFragment.addedToSunday = false;
+                break;
+            case "Monday":
+                DetailsMealFragment.addedToMonday = false;
+                break;
+            case "Tuesday":
+                DetailsMealFragment.addedToTuesday = false;
+                break;
+            case "Wednesday":
+                DetailsMealFragment.addedToWedensday = false;
+                break;
+            case "Thursday":
+                DetailsMealFragment.addedToThursday = false;
+                break;
+            case "Friday":
+                DetailsMealFragment.addedToFriday = false;
+                break;
+        }
     }
 
     @Override

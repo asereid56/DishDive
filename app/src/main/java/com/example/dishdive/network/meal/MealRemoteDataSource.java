@@ -1,5 +1,6 @@
 package com.example.dishdive.network.meal;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.dishdive.model.Category;
@@ -14,12 +15,14 @@ import com.example.dishdive.model.MealResponse;
 import com.example.dishdive.model.PopularMeal;
 import com.example.dishdive.model.PopularMealResponse;
 
+import java.io.File;
 import java.util.List;
 
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,31 +34,33 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 public class MealRemoteDataSource {
     private static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
-    private static Retrofit retrofit = null;
-    private static MealRemoteDataSource insatance = null;
-    MealsServices mealsServices;
+    private static final long CACHE_SIZE = 10 * 1024 * 1024; // 10 MB cache size
+    private static MealRemoteDataSource instance;
+    private final MealsServices mealsServices;
 
+    private MealRemoteDataSource(Context context) {
+        File httpCacheDirectory = new File(context.getCacheDir(), "http-cache");
+        Cache cache = new Cache(httpCacheDirectory, CACHE_SIZE);
 
-    private MealRemoteDataSource() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .cache(cache)
+                .build();
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(loggingInterceptor);
-
-        OkHttpClient client = httpClient.build();
-
-        retrofit = new Retrofit.Builder().client(client)
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create()).baseUrl(BASE_URL).build();
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .build();
+
         mealsServices = retrofit.create(MealsServices.class);
     }
 
-    public static synchronized MealRemoteDataSource getInstance() {
-        if (insatance == null) {
-            insatance = new MealRemoteDataSource();
+    public static synchronized MealRemoteDataSource getInstance(Context context) {
+        if (instance == null) {
+            instance = new MealRemoteDataSource(context);
         }
-        return insatance;
+        return instance;
     }
 
     public void makeNetworkCallForDailyMail(NetworkCallBackRandomMeal networkCallBack) {
@@ -67,7 +72,7 @@ public class MealRemoteDataSource {
                             networkCallBack.dealyMealOnSuccess(dailyMeal.getMeals().get(0));
                         },
                         e -> {
-                            networkCallBack.onFailure(e.toString());
+                            networkCallBack.onFailure("Check your Connection");
                         }
                 );
 
@@ -82,7 +87,7 @@ public class MealRemoteDataSource {
                             networkCallBack.popularMealOnSuccess(popularMeals.getMeals());
                         },
                         e -> {
-                            networkCallBack.onFailure(e.toString());
+                            networkCallBack.onFailure("Check your Connection");
                         });
     }
 
@@ -97,7 +102,7 @@ public class MealRemoteDataSource {
                             networkCallBack.getMealDetailsOnSuccess(mealDetails.getMeals().get(0));
                         },
                         e -> {
-                            networkCallBack.onFailure(e.toString());
+                            networkCallBack.onFailure("Check your Connection");
                         });
     }
 
@@ -110,7 +115,7 @@ public class MealRemoteDataSource {
                             networkCallBack.getCategoriesOnSuccess(categoryResponse.getCategories());
                         },
                         e -> {
-                            networkCallBack.onFailure(e.toString());
+                            networkCallBack.onFailure("Check your Connection");
                         });
     }
 
@@ -125,7 +130,7 @@ public class MealRemoteDataSource {
                                 networkCallbackAreaMeals.categoryMealsOnSuccess(popularMeals);
                             }
                         },
-                        e -> networkCallbackAreaMeals.onFailure("Failed to load Area Meals"));
+                        e -> networkCallbackAreaMeals.onFailure("Check your Connection"));
     }
 
 
@@ -141,7 +146,7 @@ public class MealRemoteDataSource {
                                 networkCallBack.ingredientsMealsOnSuccess(popularMeals);
                             }
                         },
-                        throwable -> networkCallBack.onFailure("Failed to load Meals"));
+                        throwable -> networkCallBack.onFailure("Check your Connection"));
     }
 
 
@@ -158,7 +163,7 @@ public class MealRemoteDataSource {
                                 networkCallBack.mealOnSuccess(null);
                             }
                         },
-                        e -> networkCallBack.onFailure("Failed to Load Meals"));
+                        e -> networkCallBack.onFailure("Check your Connection"));
     }
 
 
@@ -173,7 +178,7 @@ public class MealRemoteDataSource {
                                 networkCallBack.categoryMealsOnSuccess(popularMeals);
                             }
                         },
-                        e -> networkCallBack.onFailure("Failed to load Category Meals"));
+                        e -> networkCallBack.onFailure("Check your Connection"));
     }
 
     public void makeNetworkCallForIngredients(NetworkCallBackIngredients networkCallBackIngredients) {
@@ -187,7 +192,7 @@ public class MealRemoteDataSource {
                                 networkCallBackIngredients.getAllIngredientsOnSuccess(ingredients);
                             }
                         },
-                        e -> networkCallBackIngredients.onFailure("Failed to fetch Ingredients"));
+                        e -> networkCallBackIngredients.onFailure("Check your Connection"));
     }
 
     public void makeNetworkCallForCountries(NetworkCallBackCountries networkCallBack) {
@@ -201,7 +206,7 @@ public class MealRemoteDataSource {
                                 networkCallBack.countryOnSuccess(countries);
                             }
                         },
-                        e -> networkCallBack.onFailure("Failed to fetch countries"));
+                        e -> networkCallBack.onFailure("Check your Connection"));
     }
 
 

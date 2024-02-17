@@ -49,7 +49,8 @@ public class HomeFragment extends Fragment implements HomeView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new HomePresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()));
+        Context applicationContext = requireContext().getApplicationContext();
+        presenter = new HomePresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)));
         randomDailyImage = view.findViewById(R.id.dailyMeal);
         recyclerView = view.findViewById(R.id.popularRecycleView);
         btnSearch = view.findViewById(R.id.btnSearch);
@@ -112,11 +113,7 @@ public class HomeFragment extends Fragment implements HomeView {
 
     @Override
     public void showPopularImage(List<PopularMeal> meals) {
-        if (meals != null) {
-            popularAdapter.setPopularMeals(meals);
-        } else {
-            Log.d("HomeFragment", "List of popular meals is null");
-        }
+        popularAdapter.setPopularMeals(meals);
     }
 
 

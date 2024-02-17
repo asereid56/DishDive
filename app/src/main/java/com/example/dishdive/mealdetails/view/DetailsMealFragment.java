@@ -1,6 +1,7 @@
 package com.example.dishdive.mealdetails.view;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -54,7 +55,13 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
     FirebaseUser user;
     FloatingActionButton btnPlan;
     public static boolean isDayAdded = false;
-
+    public static boolean addedToSaturday = false;
+    public static boolean addedToSunday = false;
+    public static boolean addedToMonday = false;
+    public static boolean addedToTuesday = false;
+    public static boolean addedToWedensday = false;
+    public static boolean addedToThursday = false;
+    public static boolean addedToFriday = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,13 +81,16 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         initUI(view);
         getInformationOfMealFromTheArgs();
         setDetailstoUI();
-        presenter = new MealDetailsPresenter(this , MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()) , MealRemoteDataSource.getInstance()));
+
+        Context applicationContext = requireContext().getApplicationContext();
+        presenter = new MealDetailsPresenter(this , MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()) , MealRemoteDataSource.getInstance(applicationContext)));
+
         presenter.getMealDetails(mealID);
 
         youtubeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleVideoPlayback();
+                toggleVideoPlayback(meal.getStrYoutube());
             }
         });
         btnFav.setOnClickListener(new View.OnClickListener() {
@@ -88,9 +98,8 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
             public void onClick(View v) {
                 user = auth.getCurrentUser();
                 if(user != null){
-                    String email = user.getEmail();
-                    meal.setEmail(email);
                     presenter.addToFav(meal);
+                    Toast.makeText(applicationContext, "Added to Favourite", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getContext(), "Log in First", Toast.LENGTH_SHORT).show();
                 }
@@ -145,19 +154,20 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
     }
 
     public void playVideo(String url) {
-        if (url != null && url.contains("v=")) {
-            String videoId = extractVideoId(url);
-            //String videoId = url.split("v=")[1];
-            youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
-                @Override
-                public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-                    youTubePlayer.cueVideo(videoId, 0);
-                    isVideoReady = true;
-                }
-            });
-        } else {
-            Log.e("DetailsMealFragment", "Invalid video URL: " + url);
-        }
+        getLifecycle().addObserver(youTubePlayerView);
+        youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+            @Override
+            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                String videoId = getId(url);
+                youTubePlayer.cueVideo(videoId, 0);
+            }
+        });
+    }
+    private String getId(String url) {
+        String result = "";
+        if (url != null && url.split("\\?v=").length > 1)
+            result = url.split("\\?v=")[1];
+        return result;
     }
 
     @Override
@@ -169,21 +179,10 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         videoLink = meal.getStrYoutube().toString();
     }
 
-    public static String extractVideoId(String youtubeUrl) {
-        String videoId = null;
-        String pattern = "(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%2Fvideos%2F|youtu.be%2F|%2Fv%2F)[^#\\&\\?\\n]*";
-        Pattern compiledPattern = Pattern.compile(pattern);
-        Matcher matcher = compiledPattern.matcher(youtubeUrl); //url is youtube url for which you want to extract video id.
-        if (matcher.find()) {
-            videoId = matcher.group();
-        }
-        return videoId;
-    }
-
-    private void toggleVideoPlayback() {
+    private void toggleVideoPlayback(String url) {
         if (!isVideoAppear) {
             youTubePlayerView.setVisibility(View.VISIBLE);
-            playVideo(videoLink);
+            playVideo(url);
             isVideoAppear = true;
         } else {
             youTubePlayerView.setVisibility(View.GONE);
@@ -224,41 +223,50 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         Button btnThurs = dialogView.findViewById(R.id.btnThursday);
         Button btnFri = dialogView.findViewById(R.id.btnFri);
 
-        setDayButtonClickListener(btnSat);
-        setDayButtonClickListener(btnSun);
-        setDayButtonClickListener(btnMon);
-        setDayButtonClickListener(btnTues);
-        setDayButtonClickListener(btnWed);
-        setDayButtonClickListener(btnThurs);
-        setDayButtonClickListener(btnFri);
+
+        btnSat.setOnClickListener(v -> addToPlan(btnSat.getText().toString(), addedToSaturday));
+        btnSun.setOnClickListener(v -> addToPlan(btnSun.getText().toString(), addedToSunday));
+        btnMon.setOnClickListener(v -> addToPlan(btnMon.getText().toString(), addedToMonday));
+        btnTues.setOnClickListener(v -> addToPlan(btnTues.getText().toString(), addedToTuesday));
+        btnWed.setOnClickListener(v -> addToPlan(btnWed.getText().toString(), addedToWedensday));
+        btnThurs.setOnClickListener(v -> addToPlan(btnThurs.getText().toString(), addedToThursday));
+        btnFri.setOnClickListener(v -> addToPlan(btnFri.getText().toString(), addedToFriday));
+
 
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-    public void addToPlan(String day){
-        Log.i("TAG", "onClick: entered to the function add to plan");
-        user = auth.getCurrentUser();
-        if(user != null){
-            String email = user.getEmail();
+    public void addToPlan(String day, boolean addedToDay) {
+        if(!addedToDay){
+            Toast.makeText(getContext(), "Added to "+ day, Toast.LENGTH_SHORT).show();
             meal.setDay(day);
-            meal.setEmail(email);
             presenter.addToPlan(meal);
-        }else{
-            Toast.makeText(getContext(), "Log in First", Toast.LENGTH_SHORT).show();
+            switch (day) {
+                case "Saturday":
+                    addedToSaturday = true;
+                    break;
+                case "Sunday":
+                    addedToSunday = true;
+                    break;
+                case "Monday":
+                    addedToMonday = true;
+                    break;
+                case "Tuesday":
+                    addedToTuesday = true;
+                    break;
+                case "Wednesday":
+                    addedToWedensday = true;
+                    break;
+                case "Thursday":
+                    addedToThursday = true;
+                    break;
+                case "Friday":
+                    addedToFriday = true;
+                    break;
+            }
+        } else {
+            Toast.makeText(getContext(), "You have already added a meal", Toast.LENGTH_SHORT).show();
         }
     }
-    private void setDayButtonClickListener(Button button) {
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isDayAdded) {
-                    Toast.makeText(getContext(), "Added to "+ button.getText().toString(), Toast.LENGTH_SHORT).show();
-                    addToPlan(button.getText().toString());
-                    isDayAdded = true;
-                } else {
-                    Toast.makeText(getContext(), "You have already added a meal", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+
 }

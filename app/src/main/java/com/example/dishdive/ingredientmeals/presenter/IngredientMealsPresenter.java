@@ -1,5 +1,6 @@
 package com.example.dishdive.ingredientmeals.presenter;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class IngredientMealsPresenter implements NetworkCallBackIngredientsMeals {
     MealRepository mealRepository;
     IngredientMealsView view;
+    Context context;
 
     public IngredientMealsPresenter(MealRepository mealRepository , IngredientMealsView view){
         this.mealRepository = mealRepository;
@@ -29,6 +31,6 @@ public class IngredientMealsPresenter implements NetworkCallBackIngredientsMeals
 
     @Override
     public void onFailure(String msg) {
-        Log.i("TAG", "onFailure: " + msg);
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 }

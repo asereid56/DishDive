@@ -1,5 +1,6 @@
 package com.example.dishdive.search.view;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -74,7 +75,8 @@ public class SearchFragment extends Fragment implements SearchView {
         recyclerView = view.findViewById(R.id.recycleView);
         searchText = view.findViewById(R.id.searchText);
 
-        searchPresenter = new SearchPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance()), this , getContext());
+        Context applicationContext = requireContext().getApplicationContext();
+        searchPresenter = new SearchPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)), this , getContext());
 
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
