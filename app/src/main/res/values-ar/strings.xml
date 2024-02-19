@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ديش دايف</string>
+    <string name="DishDive">ديش دايف</string>
+    <string name="slogan">استمتع بكل نكهة بطريقتك الخاصة!</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="orloginWith">أو قم بتسجيل الدخول باستخدام</string>
+    <string name="donthaveaccount">ليس لديك حساب؟</string>
+    <string name="signup">إنشاء حساب</string>
+    <string name="register">تسجيل</string>
+    <string name="back">رجوع</string>
+    <string name="guest">كضيف</string>
+    <string name="hello_blank_fragment">مرحبًا بك في الشاشة الفارغة</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name="plan">الخطة</string>
+    <string name="home">الرئيسية</string>
+    <string name="favourite">المفضلة</string>
+    <string name="randomMeal">استمتع بوجبة يومية رائعة!</string>
+    <string name="popular">الوجبة الشهيرة!</string>
+    <string name="instructions">- التعليمات</string>
+    <string name="area_egypt">المنطقة: مصر</string>
+    <string name="catogry_beef">الفئة: لحم بقر</string>
+    <string name="add_to_calender">إضافة إلى التقويم</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="search">بحث</string>
+    <string name="my_saved_recipes">وصفاتي المحفوظة</string>
+    <string name="my_plan">خطتي</string>
+    <string name="saturday">السبت</string>
+    <string name="add">إضافة</string>
+    <string name="delete">حذف</string>
+    <string name="monday">الاثنين</string>
+    <string name="sunday">الأحد</string>
+    <string name="tuesday">الثلاثاء</string>
+    <string name="wednesday">الأربعاء</string>
+    <string name="friday">الجمعة</string>
+    <string name="choose_day">اختر اليوم</string>
+    <string name="thursday">الخميس</string>
+    <string name="welcome">مرحبًا مجددًا!</string>
+    <string name="country">البلد</string>
+    <string name="ingredient">المكون</string>
+    <string name="category">الفئة</string>
+    <string name="choose_your_meal">اختر وجبتك:</string>
+    <string name="personalized_recipe_discovery">اكتشاف الوصفات المخصصة</string>
+    <string name="tell_us_your_food_preferences_and_we_ll_serve_you_delicious_recipes_ideas">قل لنا تفضيلاتك الغذائية وسنقدم لك أفكار وصفات شهية.</string>
+    <string name="skip">تخطي</string>
+    <string name="next">التالي</string>
+    <string name="favorite_finds">العثور على المفضلة</string>
+    <string name="save_your_top_picks_and_easily_access_them_whenever_you_crave_a_delightful_meal">احفظ أفضل اختياراتك واستمتع بها في أي وقت تشتهي وجبة شهية.</string>
+    <string name="weekly_culinary_agenda">جدول غذائي أسبوعي</string>
+    <string name="plan_your_week_with_a_personalized_food_itinerary_enjoy_a_week_full_of_scrumptious_delights">خطط لأسبوعك بجدول غذائي شخصي. استمتع بأسبوع مليء بالأطباق اللذيذة!</string>
+    <string name="get_started">ابدأ الآن</string>
+    <string name="google">1062086965572-kcmuf6pkf9tb0q4cv7cpmos8ajlukr2v.apps.googleusercontent.com</string>
+    <string name="backUp">نسخ احتياطي</string>
+
+</resources>

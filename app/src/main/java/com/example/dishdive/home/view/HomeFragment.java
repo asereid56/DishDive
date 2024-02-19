@@ -1,7 +1,5 @@
 package com.example.dishdive.home.view;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -48,7 +46,7 @@ public class HomeFragment extends Fragment implements HomeView {
     HomePresenter presenter;
     ImageView btnSearch;
     private FirebaseAuth mAuth;
-
+    String email = null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,6 +57,7 @@ public class HomeFragment extends Fragment implements HomeView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         Context applicationContext = requireContext().getApplicationContext();
         presenter = new HomePresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)));
         randomDailyImage = view.findViewById(R.id.dailyMeal);
@@ -66,10 +65,11 @@ public class HomeFragment extends Fragment implements HomeView {
         btnSearch = view.findViewById(R.id.btnSearch);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        String email = null;
+
         if(currentUser!= null){
             email = currentUser.getEmail();
         }
+
         presenter.syncALlMealToLocalDataBase(email);
 
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

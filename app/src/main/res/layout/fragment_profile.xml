@@ -102,7 +102,7 @@
         android:id="@+id/textView11"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="130dp"
         android:layout_marginBottom="39dp"
         android:fontFamily="@font/secondary"
         android:gravity="center"
@@ -121,7 +121,7 @@
         android:layout_marginEnd="5dp"
         android:text="@string/backUp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintHorizontal_bias="0.82"
+        app:layout_constraintHorizontal_bias="0.925"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="@+id/textView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

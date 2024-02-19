@@ -77,27 +77,12 @@ public class MealLocalDataSource {
     public void insertToFav(Meal meal) {
         meal.setDbType("Fav");
         meal.setEmail(email);
-
         new Thread(new Runnable() {
             @Override
             public void run() {
                 mealDao.insertMeal(meal);
             }
         }).start();
-
-//        Flowable.fromCallable(() -> {
-//            mealDao.insertMeal(meal);
-//            return true;
-//        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(result -> {
-//                    databaseReference.child(email.replace(".", "_")).child("Fav").child(meal.getIdMeal()).setValue(meal)
-//                            .addOnSuccessListener(aVoid -> Log.d("TAG", "Meal added to favorites successfully"))
-//                            .addOnFailureListener(e -> Log.e("TAG", "Error adding meal to favorites: " + e.getMessage()));
-//
-//                },
-//                error -> {
-//                    // Handle error
-//                    Log.e("TAG", "Error inserting saved meal: " + error.getMessage());
-//                });
     }
 
     public void insertToPlan(Meal meal) {
@@ -164,6 +149,7 @@ public class MealLocalDataSource {
 
 
     }
+
     public void syncLocalDatabaseFromRemote(String email) {
         if (email == null) {
             Log.e("TAG", "Email is null. Cannot synchronize database.");
@@ -172,7 +158,6 @@ public class MealLocalDataSource {
         DatabaseReference userFavRef = databaseReference.child(email.replace(".", "_")).child("Fav");
         DatabaseReference userPlanRef = databaseReference.child(email.replace(".", "_")).child("Plan");
 
-        // Retrieve favorite meals from remote database
         userFavRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -183,7 +168,7 @@ public class MealLocalDataSource {
                         favoriteMeals.add(meal);
                     }
                 }
-                // Insert favorite meals into local database
+
                 insertFavoriteMealsToLocalDB(favoriteMeals);
             }
 
@@ -193,7 +178,7 @@ public class MealLocalDataSource {
             }
         });
 
-        // Retrieve plan meals from remote database
+
         userPlanRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -206,7 +191,7 @@ public class MealLocalDataSource {
                         }
                     }
                 }
-                // Insert plan meals into local database
+
                 insertPlanMealsToLocalDB(planMeals);
             }
 

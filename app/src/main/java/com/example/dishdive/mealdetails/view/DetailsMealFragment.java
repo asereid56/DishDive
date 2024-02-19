@@ -3,16 +3,14 @@ package com.example.dishdive.mealdetails.view;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavDirections;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.provider.CalendarContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +35,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class DetailsMealFragment extends Fragment implements MealDetailsView {
@@ -60,7 +56,6 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
     FirebaseAuth auth;
     FirebaseUser user;
     FloatingActionButton btnPlan;
-    public static boolean isDayAdded = false;
     public static boolean addedToSaturday = false;
     public static boolean addedToSunday = false;
     public static boolean addedToMonday = false;
@@ -68,7 +63,8 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
     public static boolean addedToWedensday = false;
     public static boolean addedToThursday = false;
     public static boolean addedToFriday = false;
-    AlertDialog.Builder builder ;
+    private SharedPreferences sharedPreferences;
+    AlertDialog.Builder builder;
     private AlertDialog dialog;
 
 
@@ -80,9 +76,17 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
         auth = FirebaseAuth.getInstance();
         return inflater.inflate(R.layout.fragment_details_meal, container, false);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        retrieveSavedState();
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -270,6 +274,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         dialog.show();
 
     }
+
     private void dismissDialog() {
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
@@ -304,8 +309,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
                     break;
             }
             Toast.makeText(getContext(), "Added to " + day, Toast.LENGTH_SHORT).show();
-//            NavDirections action = DetailsMealFragmentDirections.actionDetailsMealFragmentSelf(meal.getIdMeal() ,meal.getStrMeal() , meal.getStrMealThumb());
-//            NavHostFragment.findNavController(this).navigate(action);
+            saveState(day, true);
             if (getActivity() != null) {
                 AlertDialog dialog = (AlertDialog) builder.create();
                 dialog.dismiss();
@@ -313,6 +317,22 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         } else {
             Toast.makeText(getContext(), "You have already added a meal", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void saveState(String key, boolean value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    private void retrieveSavedState() {
+        addedToSaturday = sharedPreferences.getBoolean("Saturday", false);
+        addedToSunday = sharedPreferences.getBoolean("Sunday", false);
+        addedToMonday = sharedPreferences.getBoolean("Monday", false);
+        addedToTuesday = sharedPreferences.getBoolean("Tuesday", false);
+        addedToWedensday = sharedPreferences.getBoolean("Wednesday", false);
+        addedToThursday = sharedPreferences.getBoolean("Thursday", false);
+        addedToFriday = sharedPreferences.getBoolean("Friday", false);
     }
 
 }

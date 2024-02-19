@@ -93,7 +93,6 @@ public class PlanFragment extends Fragment implements PlanView, OnPlanClickListe
     }
 
     public void updatePlanMeals(List<Meal> meals) {
-        Log.i("Plannnnnnn", "updatePlanMeals: " + meals.size());
         planAdapter.setMeals(meals);
         planAdapter.notifyDataSetChanged();
     }
@@ -133,29 +132,31 @@ public class PlanFragment extends Fragment implements PlanView, OnPlanClickListe
     }
 
     private void updateDayFlags(String day) {
+        SharedPreferences.Editor editor = preferences.edit();
         switch (day) {
             case "Saturday":
-                DetailsMealFragment.addedToSaturday = false;
+                editor.putBoolean("addedToSaturday", false);
                 break;
             case "Sunday":
-                DetailsMealFragment.addedToSunday = false;
+                editor.putBoolean("addedToSunday", false);
                 break;
             case "Monday":
-                DetailsMealFragment.addedToMonday = false;
+                editor.putBoolean("addedToMonday", false);
                 break;
             case "Tuesday":
-                DetailsMealFragment.addedToTuesday = false;
+                editor.putBoolean("addedToTuesday", false);
                 break;
             case "Wednesday":
-                DetailsMealFragment.addedToWedensday = false;
+                editor.putBoolean("addedToWednesday", false);
                 break;
             case "Thursday":
-                DetailsMealFragment.addedToThursday = false;
+                editor.putBoolean("addedToThursday", false);
                 break;
             case "Friday":
-                DetailsMealFragment.addedToFriday = false;
+                editor.putBoolean("addedToFriday", false);
                 break;
         }
+        editor.apply();
     }
 
     @Override

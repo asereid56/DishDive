@@ -1,6 +1,6 @@
 package com.example.dishdive.db;
 
-import androidx.lifecycle.LiveData;
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.example.dishdive.model.Meal;
+
 import io.reactivex.rxjava3.core.Flowable;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public interface MealDao {
 
     @Query("SELECT * FROM mealInformation WHERE dbType ='Plan' AND email = :userEmail")
     Flowable<List<Meal>> getPlannedMeals(String userEmail);
+
     @Query("SELECT * FROM mealInformation WHERE idMeal = :mealId")
     Flowable<Meal> getMealById(String mealId);
 

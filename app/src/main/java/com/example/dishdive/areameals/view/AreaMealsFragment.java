@@ -61,13 +61,17 @@ public class AreaMealsFragment extends Fragment implements AreaMealView {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.recycleView);
         getInformationOfAreaFromTheArgs();
+
         Context applicationContext = requireContext().getApplicationContext();
         presenter = new AreaMealsPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)) , this);
+
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         areaMealsAdapter = new AreaMealsAdapter(getContext(), new ArrayList<>());
         recyclerView.setAdapter(areaMealsAdapter);
+
         presenter.fetchCategoryMeals(area);
+
         areaMealsAdapter.setOnItemClickListener(new AreaMealsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(PopularMeal meal) {

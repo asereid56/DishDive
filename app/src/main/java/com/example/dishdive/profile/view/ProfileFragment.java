@@ -33,15 +33,16 @@ public class ProfileFragment extends Fragment {
     Button btnLogout;
     TextView userEmail;
     SharedPreferences preferences;
-    CardView cardView1 ;
-    CardView cardView2 ;
+    CardView cardView1;
+    CardView cardView2;
     ProfilePresenter profilePresenter;
     Button btnBackup;
+    TextView welcomeText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        preferences = getActivity().getSharedPreferences("AuthState" , Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences("AuthState", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -58,6 +59,7 @@ public class ProfileFragment extends Fragment {
         cardView1 = view.findViewById(R.id.cardForLottie);
         cardView2 = view.findViewById(R.id.card2);
         btnBackup = view.findViewById(R.id.btnBackup);
+        welcomeText = view.findViewById(R.id.textView11);
 
         preferences = getActivity().getSharedPreferences("AuthState", Context.MODE_PRIVATE);
         if (preferences.getBoolean("isLoggedIn", false)) {
@@ -65,6 +67,8 @@ public class ProfileFragment extends Fragment {
             btnLogout.setVisibility(View.VISIBLE);
             cardView1.setVisibility(View.VISIBLE);
             cardView2.setVisibility(View.VISIBLE);
+            welcomeText.setVisibility(View.VISIBLE);
+            btnBackup.setVisibility(View.VISIBLE);
             setupProfileFragment();
         } else {
             showLoginDialog();
@@ -72,9 +76,10 @@ public class ProfileFragment extends Fragment {
             btnLogout.setVisibility(View.INVISIBLE);
             cardView1.setVisibility(View.INVISIBLE);
             cardView2.setVisibility(View.INVISIBLE);
-
+            welcomeText.setVisibility(View.INVISIBLE);
+            btnBackup.setVisibility(View.INVISIBLE);
         }
-        profilePresenter = new ProfilePresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()) , MealRemoteDataSource.getInstance(getContext())));
+        profilePresenter = new ProfilePresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(getContext())));
         btnBackup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,6 +106,7 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
     private void showLoginDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Login Required");
@@ -108,7 +114,7 @@ public class ProfileFragment extends Fragment {
         builder.setPositiveButton("Login", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Navigate to login screen
+
                 Intent intent = new Intent(getActivity(), LoginScreen.class);
                 startActivity(intent);
                 getActivity().finish();

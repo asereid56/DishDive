@@ -1,7 +1,6 @@
 package com.example.dishdive.home.presenter;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
@@ -62,5 +61,6 @@ public class HomePresenter implements NetworkCallBackRandomMeal, NetworkCallBack
     public void syncALlMealToLocalDataBase(String email) {
         mealRepository.syncALlMealToLocalDataBase(email);
     }
+
 }
 

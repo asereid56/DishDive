@@ -27,7 +27,6 @@ public class CategoryMealsPresenter implements NetworkCallBackCategoryMeals {
 
     public void fetchCategoryMeals(String name) {
         mealRepository.getMealsOfCategory(name, this);
-
     }
 
     @Override

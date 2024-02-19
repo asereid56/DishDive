@@ -16,10 +16,5 @@ public class OnBoardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_board);
-
-        NavController navController = Navigation.findNavController(this, R.id.mainOnBoardFragment);
-       // NavigationUI.setupActionBarWithNavController(this, navController);
-       // navController.navigate(R.id.onBoardOneFragment);
-
     }
 }
