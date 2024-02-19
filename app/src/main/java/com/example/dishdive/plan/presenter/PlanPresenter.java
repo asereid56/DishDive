@@ -18,6 +18,7 @@ public class PlanPresenter {
     String email;
     FirebaseAuth auth;
     FirebaseUser user;
+    LiveData<List<Meal>> listLiveData;
 
     public PlanPresenter(PlanView planView ,MealRepository mealRepository) {
         auth = FirebaseAuth.getInstance();

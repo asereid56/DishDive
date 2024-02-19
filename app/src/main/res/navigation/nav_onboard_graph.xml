@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_onboard_graph"
+    app:startDestination="@id/onBoardOneFragment">
+
+    <fragment
+        android:id="@+id/onBoardOneFragment"
+        android:name="com.example.dishdive.onboard.view.OnBoardOneFragment"
+        android:label="fragment_on_board_one"
+        tools:layout="@layout/fragment_on_board_one" >
+        <action
+            android:id="@+id/action_onBoardOneFragment_to_onBoardTwoFragment"
+            app:destination="@id/onBoardTwoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/onBoardTwoFragment"
+        android:name="com.example.dishdive.onboard.view.OnBoardTwoFragment"
+        android:label="fragment_on_board_two"
+        tools:layout="@layout/fragment_on_board_two" >
+        <action
+            android:id="@+id/action_onBoardTwoFragment_to_onBoardOneFragment"
+            app:destination="@id/onBoardOneFragment" />
+        <action
+            android:id="@+id/action_onBoardTwoFragment_to_oneBoardThreeFragment"
+            app:destination="@id/oneBoardThreeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/oneBoardThreeFragment"
+        android:name="com.example.dishdive.onboard.view.OneBoardThreeFragment"
+        android:label="fragment_one_board_three"
+        tools:layout="@layout/fragment_one_board_three" >
+        <action
+            android:id="@+id/action_oneBoardThreeFragment_to_onBoardTwoFragment"
+            app:destination="@id/onBoardTwoFragment" />
+    </fragment>
+</navigation>

@@ -1,6 +1,10 @@
 package com.example.dishdive.home.view;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -17,7 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+
+import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.dishdive.R;
 import com.example.dishdive.db.MealLocalDataSource;
@@ -34,7 +41,6 @@ import java.util.List;
 public class HomeFragment extends Fragment implements HomeView {
     ImageView randomDailyImage;
     Meal randomMeal;
-    LinearLayoutManager linearLayoutManager;
     RecyclerView recyclerView;
     MostPopularAdapter popularAdapter;
     HomePresenter presenter;
@@ -56,13 +62,21 @@ public class HomeFragment extends Fragment implements HomeView {
         recyclerView = view.findViewById(R.id.popularRecycleView);
         btnSearch = view.findViewById(R.id.btnSearch);
 
-//        linearLayoutManager = new LinearLayoutManager(getContext());
-//        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         popularAdapter = new MostPopularAdapter(getContext(), new ArrayList<>());
-      //  recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(popularAdapter);
+
+        if (!isInternetConnected()) {
+            btnSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    navigateToSearchFragment("");
+                }
+            });
+            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         presenter.getRandomDailyMeal();
         presenter.getMealLiveData().observe(getViewLifecycleOwner(), new Observer<Meal>() {
@@ -152,4 +166,14 @@ public class HomeFragment extends Fragment implements HomeView {
 
         NavHostFragment.findNavController(this).navigate(action);
     }
+
+    private boolean isInternetConnected() {
+        ConnectivityManager cm = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+        return false;
+    }
+
 }

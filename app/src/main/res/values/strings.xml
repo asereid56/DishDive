@@ -39,4 +39,15 @@
     <string name="ingredient">Ingredient</string>
     <string name="category">Category</string>
     <string name="choose_your_meal">Choose Your Meal :</string>
+    <string name="personalized_recipe_discovery">Personalized Recipe Discovery</string>
+    <string name="tell_us_your_food_preferences_and_we_ll_serve_you_delicious_recipes_ideas">Tell us your food preferences and we ‘ll serve you delicious recipes ideas.</string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="favorite_finds">Favorite Finds</string>
+    <string name="save_your_top_picks_and_easily_access_them_whenever_you_crave_a_delightful_meal">Save your top picks and easily access them whenever you crave a delightful meal.</string>
+    <string name="weekly_culinary_agenda">Weekly Culinary Agenda</string>
+    <string name="plan_your_week_with_a_personalized_food_itinerary_enjoy_a_week_full_of_scrumptious_delights">Plan your week with a personalized food itinerary. Enjoy a week full of scrumptious delights!</string>
+    <string name="get_started">Get Started</string>
+    <string name="google">1062086965572-kcmuf6pkf9tb0q4cv7cpmos8ajlukr2v.apps.googleusercontent.com</string>
+    <string name="backUp">Backup</string>
 </resources>

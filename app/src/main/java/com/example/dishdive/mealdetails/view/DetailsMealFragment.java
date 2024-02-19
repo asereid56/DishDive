@@ -4,9 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
+
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.example.dishdive.R;
 import com.example.dishdive.db.MealLocalDataSource;
@@ -31,6 +36,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +44,7 @@ import java.util.regex.Pattern;
 public class DetailsMealFragment extends Fragment implements MealDetailsView {
     MealDetailsPresenter presenter;
     Meal meal;
-    String mealName , mealID , mealThumb;
+    String mealName, mealID, mealThumb;
     ImageView imgMeal;
     CollapsingToolbarLayout collapsingToolbarLayout;
     TextView category;
@@ -62,6 +68,9 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
     public static boolean addedToWedensday = false;
     public static boolean addedToThursday = false;
     public static boolean addedToFriday = false;
+    AlertDialog.Builder builder ;
+    private AlertDialog dialog;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +92,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         setDetailstoUI();
 
         Context applicationContext = requireContext().getApplicationContext();
-        presenter = new MealDetailsPresenter(this , MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()) , MealRemoteDataSource.getInstance(applicationContext)));
+        presenter = new MealDetailsPresenter(this, MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)));
 
         presenter.getMealDetails(mealID);
 
@@ -97,10 +106,10 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
             @Override
             public void onClick(View v) {
                 user = auth.getCurrentUser();
-                if(user != null){
+                if (user != null) {
                     presenter.addToFav(meal);
                     Toast.makeText(applicationContext, "Added to Favourite", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(getContext(), "Log in First", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -115,9 +124,9 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
             @Override
             public void onClick(View v) {
                 user = auth.getCurrentUser();
-                if(user != null){
+                if (user != null) {
                     showDialogToAddToPlan();
-                }else{
+                } else {
                     Toast.makeText(getContext(), "Log in First", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -145,6 +154,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         btnFav = view.findViewById(R.id.add_to_favourite);
         btnCalender = view.findViewById(R.id.calenderBtn);
         btnPlan = view.findViewById(R.id.add_to_plan);
+        builder = new AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog);
     }
 
     private void setDetailstoUI() {
@@ -164,6 +174,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
             }
         });
     }
+
     private String getId(String url) {
         String result = "";
         if (url != null && url.split("\\?v=").length > 1)
@@ -190,7 +201,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
             youTubePlayerView.getYouTubePlayerWhenReady(new YouTubePlayerCallback() {
                 @Override
                 public void onYouTubePlayer(YouTubePlayer youTubePlayer) {
-                        youTubePlayer.pause();
+                    youTubePlayer.pause();
                 }
             });
             isVideoAppear = false;
@@ -210,9 +221,10 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
 
         startActivity(intent);
     }
+
     private void showDialogToAddToPlan() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog);
-        View dialogView = getLayoutInflater().inflate(R.layout.choose_day_plan,null);
+        View dialogView = getLayoutInflater().inflate(R.layout.choose_day_plan, null);
         dialogView.setBackgroundResource(R.drawable.dialog_background);
         builder.setView(dialogView);
 
@@ -225,21 +237,55 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         Button btnFri = dialogView.findViewById(R.id.btnFri);
 
 
-        btnSat.setOnClickListener(v -> addToPlan(btnSat.getText().toString(), addedToSaturday));
-        btnSun.setOnClickListener(v -> addToPlan(btnSun.getText().toString(), addedToSunday));
-        btnMon.setOnClickListener(v -> addToPlan(btnMon.getText().toString(), addedToMonday));
-        btnTues.setOnClickListener(v -> addToPlan(btnTues.getText().toString(), addedToTuesday));
-        btnWed.setOnClickListener(v -> addToPlan(btnWed.getText().toString(), addedToWedensday));
-        btnThurs.setOnClickListener(v -> addToPlan(btnThurs.getText().toString(), addedToThursday));
-        btnFri.setOnClickListener(v -> addToPlan(btnFri.getText().toString(), addedToFriday));
+//        btnSat.setOnClickListener(v -> addToPlan(btnSat.getText().toString(), addedToSaturday));
+//        btnSun.setOnClickListener(v -> addToPlan(btnSun.getText().toString(), addedToSunday));
+//        btnMon.setOnClickListener(v -> addToPlan(btnMon.getText().toString(), addedToMonday));
+//        btnTues.setOnClickListener(v -> addToPlan(btnTues.getText().toString(), addedToTuesday));
+//        btnWed.setOnClickListener(v -> addToPlan(btnWed.getText().toString(), addedToWedensday));
+//        btnThurs.setOnClickListener(v -> addToPlan(btnThurs.getText().toString(), addedToThursday));
+//        btnFri.setOnClickListener(v -> addToPlan(btnFri.getText().toString(), addedToFriday));
+        btnSat.setOnClickListener(v -> {
+            addToPlan(btnSat.getText().toString(), addedToSaturday);
+            dismissDialog();
+        });
+        btnSun.setOnClickListener(v -> {
+            addToPlan(btnSun.getText().toString(), addedToSunday);
+            dismissDialog();
+        });
+        btnMon.setOnClickListener(v -> {
+            addToPlan(btnMon.getText().toString(), addedToMonday);
+            dismissDialog();
+        });
+        btnTues.setOnClickListener(v -> {
+            addToPlan(btnTues.getText().toString(), addedToTuesday);
+            dismissDialog();
+        });
+        btnWed.setOnClickListener(v -> {
+            addToPlan(btnWed.getText().toString(), addedToWedensday);
+            dismissDialog();
+        });
+        btnThurs.setOnClickListener(v -> {
+            addToPlan(btnThurs.getText().toString(), addedToThursday);
+            dismissDialog();
+        });
+        btnFri.setOnClickListener(v -> {
+            addToPlan(btnFri.getText().toString(), addedToFriday);
+            dismissDialog();
+        });
 
 
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         dialog.show();
+
     }
+    private void dismissDialog() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
     public void addToPlan(String day, boolean addedToDay) {
-        if(!addedToDay){
-            Toast.makeText(getContext(), "Added to "+ day, Toast.LENGTH_SHORT).show();
+        if (!addedToDay) {
             meal.setDay(day);
             presenter.addToPlan(meal);
             switch (day) {
@@ -264,6 +310,13 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
                 case "Friday":
                     addedToFriday = true;
                     break;
+            }
+            Toast.makeText(getContext(), "Added to " + day, Toast.LENGTH_SHORT).show();
+//            NavDirections action = DetailsMealFragmentDirections.actionDetailsMealFragmentSelf(meal.getIdMeal() ,meal.getStrMeal() , meal.getStrMealThumb());
+//            NavHostFragment.findNavController(this).navigate(action);
+            if (getActivity() != null) {
+                AlertDialog dialog = (AlertDialog) builder.create();
+                dialog.dismiss();
             }
         } else {
             Toast.makeText(getContext(), "You have already added a meal", Toast.LENGTH_SHORT).show();

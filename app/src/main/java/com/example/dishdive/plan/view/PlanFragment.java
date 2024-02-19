@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,9 +89,11 @@ public class PlanFragment extends Fragment implements PlanView, OnPlanClickListe
                 navigateToDetailsFragment(meal);
             }
         });
+
     }
 
     public void updatePlanMeals(List<Meal> meals) {
+        Log.i("Plannnnnnn", "updatePlanMeals: " + meals.size());
         planAdapter.setMeals(meals);
         planAdapter.notifyDataSetChanged();
     }

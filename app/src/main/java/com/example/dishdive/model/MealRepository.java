@@ -101,7 +101,10 @@ public class MealRepository {
     public Flowable<List<Meal>> getStoredPlannedMeals(String email) {
         return mealLocalDataSource.getListPlanMeals(email);
     }
-    public void setLocalDataSource(MealLocalDataSource localDataSource){
-        this.mealLocalDataSource = mealLocalDataSource;
+//    public void setLocalDataSource(MealLocalDataSource localDataSource){
+//        this.mealLocalDataSource = mealLocalDataSource;
+//    }
+    public void syncAllFavMeals(String email){
+        mealLocalDataSource.syncRealtimeDatabase(email);
     }
 }

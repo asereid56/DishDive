@@ -7,6 +7,29 @@
     android:padding="16dp"
     tools:context=".home.view.HomeFragment">
 
+<!--    <com.airbnb.lottie.LottieAnimationView-->
+<!--        android:id="@+id/fork1Lottie"-->
+<!--        android:layout_width="343dp"-->
+<!--        android:layout_height="101dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/cardView"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline2"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/cardView"-->
+<!--        app:lottie_rawRes="@raw/fork">-->
+<!--    </com.airbnb.lottie.LottieAnimationView>-->
+
+<!--    <com.airbnb.lottie.LottieAnimationView-->
+<!--        android:id="@+id/fork2Lottie"-->
+<!--        android:layout_width="347dp"-->
+<!--        android:layout_height="383dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline2"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/popularRecycleView"-->
+<!--        app:lottie_rawRes="@raw/fork">-->
+
+<!--    </com.airbnb.lottie.LottieAnimationView>-->
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="98dp"
@@ -97,5 +120,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

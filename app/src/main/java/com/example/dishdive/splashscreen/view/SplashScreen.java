@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.example.dishdive.MainActivity;
+import com.example.dishdive.onboard.view.OnBoardActivity;
 import com.example.dishdive.R;
-import com.example.dishdive.login.view.LoginScreen;
 
 public class SplashScreen extends AppCompatActivity implements SplashView{
     private static final long SPLASH_DELAY = 4000;
@@ -27,7 +27,7 @@ public class SplashScreen extends AppCompatActivity implements SplashView{
                 if (isLoggedIn) {
                     showMainActivity();
                 } else {
-                    showLoginScreen();
+                    showOnBoardScreen();
                 }
             }
         },SPLASH_DELAY);
@@ -41,8 +41,8 @@ public class SplashScreen extends AppCompatActivity implements SplashView{
     }
 
     @Override
-    public void showLoginScreen() {
-        Intent intent = new Intent(SplashScreen.this , LoginScreen.class);
+    public void showOnBoardScreen() {
+        Intent intent = new Intent(SplashScreen.this , OnBoardActivity.class);
         startActivity(intent);
         finish();
     }

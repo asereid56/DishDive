@@ -1,4 +1,4 @@
-package com.example.dishdive.profile;
+package com.example.dishdive.profile.view;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -18,10 +19,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.dishdive.R;
+import com.example.dishdive.db.MealLocalDataSource;
 import com.example.dishdive.home.view.HomeFragmentDirections;
 import com.example.dishdive.login.view.LoginScreen;
+import com.example.dishdive.model.MealRepository;
 import com.example.dishdive.model.PopularMeal;
+import com.example.dishdive.network.meal.MealRemoteDataSource;
+import com.example.dishdive.profile.presenter.ProfilePresenter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -31,6 +37,10 @@ public class ProfileFragment extends Fragment {
     Button btnLogout;
     TextView userEmail;
     SharedPreferences preferences;
+    CardView cardView1 ;
+    CardView cardView2 ;
+    ProfilePresenter profilePresenter;
+    Button btnBackup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,13 +59,35 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         btnLogout = view.findViewById(R.id.btnLogout);
         userEmail = view.findViewById(R.id.emailText);
+        cardView1 = view.findViewById(R.id.cardForLottie);
+        cardView2 = view.findViewById(R.id.card2);
+        btnBackup = view.findViewById(R.id.btnBackup);
 
         preferences = getActivity().getSharedPreferences("AuthState", Context.MODE_PRIVATE);
         if (preferences.getBoolean("isLoggedIn", false)) {
+            userEmail.setVisibility(View.VISIBLE);
+            btnLogout.setVisibility(View.VISIBLE);
+            cardView1.setVisibility(View.VISIBLE);
+            cardView2.setVisibility(View.VISIBLE);
             setupProfileFragment();
         } else {
             showLoginDialog();
+            userEmail.setVisibility(View.INVISIBLE);
+            btnLogout.setVisibility(View.INVISIBLE);
+            cardView1.setVisibility(View.INVISIBLE);
+            cardView2.setVisibility(View.INVISIBLE);
+
         }
+        profilePresenter = new ProfilePresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()) , MealRemoteDataSource.getInstance(getContext())));
+        btnBackup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth = FirebaseAuth.getInstance();
+                user = auth.getCurrentUser();
+                String email = user.getEmail();
+                profilePresenter.SyncFav(email);
+            }
+        });
     }
 
     private void setupProfileFragment() {

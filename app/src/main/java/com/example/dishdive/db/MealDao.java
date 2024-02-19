@@ -25,5 +25,7 @@ public interface MealDao {
 
     @Query("SELECT * FROM mealInformation WHERE dbType ='Plan' AND email = :userEmail")
     Flowable<List<Meal>> getPlannedMeals(String userEmail);
+    @Query("SELECT * FROM mealInformation WHERE idMeal = :mealId")
+    Flowable<Meal> getMealById(String mealId);
 
 }

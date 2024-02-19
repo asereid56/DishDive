@@ -15,6 +15,9 @@
         android:theme="@style/Theme.DishDive"
         tools:targetApi="31">
         <activity
+            android:name=".onboard.view.OnBoardActivity"
+            android:exported="false" />
+        <activity
             android:name=".register.view.RegisterScreen"
             android:exported="false" />
         <activity

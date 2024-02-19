@@ -1,6 +1,8 @@
 package com.example.dishdive.search.view;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import com.example.dishdive.R;
 import com.example.dishdive.db.MealLocalDataSource;
@@ -76,15 +79,21 @@ public class SearchFragment extends Fragment implements SearchView {
         searchText = view.findViewById(R.id.searchText);
 
         Context applicationContext = requireContext().getApplicationContext();
-        searchPresenter = new SearchPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)), this , getContext());
+        searchPresenter = new SearchPresenter(MealRepository.getInstance(MealLocalDataSource.getInstance(getContext()), MealRemoteDataSource.getInstance(applicationContext)), this, getContext());
 
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+
 
         categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>());
         countryAdapter = new CountryAdapter(getContext(), new ArrayList<>());
         ingredientAdapter = new IngredientAdapter(getContext(), new ArrayList<>());
         searchAdapter = new SearchAdapter(getContext(), new ArrayList<>());
+
+        if (!isInternetConnected()) {
+            Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         chipGroup = view.findViewById(R.id.chipGroup);
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
@@ -151,7 +160,7 @@ public class SearchFragment extends Fragment implements SearchView {
         searchText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     chipGroup.setVisibility(View.INVISIBLE);
                 } else {
                     if (searchText.getText().toString().trim().isEmpty()) {
@@ -186,9 +195,9 @@ public class SearchFragment extends Fragment implements SearchView {
                         @Override
                         public void afterTextChanged(Editable s) {
                             String mealName = s.toString().trim();
-                            if(!mealName.isEmpty()){
+                            if (!mealName.isEmpty()) {
                                 emitter.onNext(mealName);
-                            }else{
+                            } else {
                                 searchAdapter.setMeals(new ArrayList<>());
                                 searchAdapter.notifyDataSetChanged();
                             }
@@ -198,7 +207,7 @@ public class SearchFragment extends Fragment implements SearchView {
                 .subscribeOn(Schedulers.io())
                 .debounce(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mealName ->  searchPresenter.searchMealByName(mealName));
+                .subscribe(mealName -> searchPresenter.searchMealByName(mealName));
 
     }
 
@@ -263,5 +272,14 @@ public class SearchFragment extends Fragment implements SearchView {
                         country.getStrArea());
 
         NavHostFragment.findNavController(this).navigate(action);
+    }
+
+    private boolean isInternetConnected() {
+        ConnectivityManager cm = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+        return false;
     }
 }

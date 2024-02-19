@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import io.reactivex.annotations.Nullable;
 
-@Entity(tableName = "mealInformation" ,primaryKeys = {"idMeal", "email", "dbType", "planDate"})
+@Entity(tableName = "mealInformation" ,primaryKeys = {"idMeal", "email", "dbType", "day"})
 public class Meal {
     @Nullable
     private String strIngredient10;
@@ -72,7 +72,7 @@ public class Meal {
     @Nullable
     private String strMeasure12;
     @SerializedName("strMeasure13")
-    @NotNull
+    @Nullable
   //  @PrimaryKey
     private String planDate;
     @SerializedName("strMeasure10")
@@ -114,7 +114,7 @@ public class Meal {
     @Nullable
     private String strMeasure14;
     @SerializedName("strMeasure15")
-    @Nullable
+    @NotNull
     private String day;
 
     public String getStrIngredient10() {
