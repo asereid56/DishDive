@@ -23,7 +23,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dishdive.MainActivity;
 import com.example.dishdive.R;
+import com.example.dishdive.db.MealLocalDataSource;
 import com.example.dishdive.login.presenter.LoginPresenter;
+import com.example.dishdive.model.MealRepository;
+import com.example.dishdive.network.meal.MealRemoteDataSource;
 import com.example.dishdive.network.user.UsersRemoteDataSource;
 import com.example.dishdive.register.view.RegisterScreen;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
@@ -62,11 +65,13 @@ public class LoginScreen extends AppCompatActivity implements OnLoginClickListen
     private static final int REQ_ONE_TAP = 2;  // Can be any integer unique to the Activity.
     private boolean showOneTapUI = true;
     private GoogleSignInClient mGoogleSignInClient;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_screen);
+        Context applicationContext = getApplicationContext();
 //        signInRequest = BeginSignInRequest.builder()
 //                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
 //                        .setSupported(true)
@@ -102,10 +107,16 @@ public class LoginScreen extends AppCompatActivity implements OnLoginClickListen
 //                    break;
 //            }
 //        }
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
         initUI();
+//        mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        String email = null;
+//        if(currentUser!= null){
+//            email = currentUser.getEmail();
+//        }
+
+
+
 
         //  signInClient = Identity.getSignInClient(this);
 
@@ -117,6 +128,7 @@ public class LoginScreen extends AppCompatActivity implements OnLoginClickListen
         }
 
         loginPresenter = new LoginPresenter(this, new UsersRemoteDataSource());
+
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

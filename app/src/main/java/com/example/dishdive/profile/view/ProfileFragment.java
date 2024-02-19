@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +18,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.example.dishdive.R;
 import com.example.dishdive.db.MealLocalDataSource;
-import com.example.dishdive.home.view.HomeFragmentDirections;
 import com.example.dishdive.login.view.LoginScreen;
 import com.example.dishdive.model.MealRepository;
-import com.example.dishdive.model.PopularMeal;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
 import com.example.dishdive.profile.presenter.ProfilePresenter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -85,7 +81,7 @@ public class ProfileFragment extends Fragment {
                 auth = FirebaseAuth.getInstance();
                 user = auth.getCurrentUser();
                 String email = user.getEmail();
-                profilePresenter.SyncFav(email);
+                profilePresenter.syncAllMealFromLocal(email);
             }
         });
     }

@@ -1,6 +1,5 @@
 package com.example.dishdive.profile.presenter;
 
-import com.example.dishdive.db.MealLocalDataSource;
 import com.example.dishdive.model.MealRepository;
 
 public class ProfilePresenter {
@@ -8,8 +7,8 @@ public class ProfilePresenter {
     public ProfilePresenter(MealRepository mealRepository){
         this.mealRepository = mealRepository;
     }
-    public void SyncFav(String email){
-        mealRepository.syncAllFavMeals(email);
+    public void syncAllMealFromLocal(String email){
+        mealRepository.syncAllMealsToRealTimeDataBase(email);
     }
 
 }

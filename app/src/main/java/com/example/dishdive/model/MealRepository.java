@@ -1,7 +1,5 @@
 package com.example.dishdive.model;
 
-import androidx.lifecycle.LiveData;
-
 import com.example.dishdive.db.MealLocalDataSource;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
 import com.example.dishdive.network.meal.NetworkCallBackCategories;
@@ -104,7 +102,11 @@ public class MealRepository {
 //    public void setLocalDataSource(MealLocalDataSource localDataSource){
 //        this.mealLocalDataSource = mealLocalDataSource;
 //    }
-    public void syncAllFavMeals(String email){
-        mealLocalDataSource.syncRealtimeDatabase(email);
+    public void syncAllMealsToRealTimeDataBase(String email){
+        mealLocalDataSource.syncRealtimeDatabaseFromLocal(email);
+    }
+
+    public void syncALlMealToLocalDataBase(String email){
+        mealLocalDataSource.syncLocalDatabaseFromRemote(email);
     }
 }

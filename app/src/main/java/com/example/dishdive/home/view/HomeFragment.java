@@ -33,6 +33,8 @@ import com.example.dishdive.model.Meal;
 import com.example.dishdive.model.MealRepository;
 import com.example.dishdive.model.PopularMeal;
 import com.example.dishdive.network.meal.MealRemoteDataSource;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class HomeFragment extends Fragment implements HomeView {
     MostPopularAdapter popularAdapter;
     HomePresenter presenter;
     ImageView btnSearch;
+    private FirebaseAuth mAuth;
 
     @Nullable
     @Override
@@ -61,6 +64,13 @@ public class HomeFragment extends Fragment implements HomeView {
         randomDailyImage = view.findViewById(R.id.dailyMeal);
         recyclerView = view.findViewById(R.id.popularRecycleView);
         btnSearch = view.findViewById(R.id.btnSearch);
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String email = null;
+        if(currentUser!= null){
+            email = currentUser.getEmail();
+        }
+        presenter.syncALlMealToLocalDataBase(email);
 
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);

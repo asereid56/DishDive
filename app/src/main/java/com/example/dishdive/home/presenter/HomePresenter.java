@@ -58,5 +58,9 @@ public class HomePresenter implements NetworkCallBackRandomMeal, NetworkCallBack
     public void onFailure(String msg) {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
+
+    public void syncALlMealToLocalDataBase(String email) {
+        mealRepository.syncALlMealToLocalDataBase(email);
+    }
 }
 

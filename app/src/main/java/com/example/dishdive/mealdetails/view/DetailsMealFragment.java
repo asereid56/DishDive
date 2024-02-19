@@ -236,14 +236,6 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         Button btnThurs = dialogView.findViewById(R.id.btnThursday);
         Button btnFri = dialogView.findViewById(R.id.btnFri);
 
-
-//        btnSat.setOnClickListener(v -> addToPlan(btnSat.getText().toString(), addedToSaturday));
-//        btnSun.setOnClickListener(v -> addToPlan(btnSun.getText().toString(), addedToSunday));
-//        btnMon.setOnClickListener(v -> addToPlan(btnMon.getText().toString(), addedToMonday));
-//        btnTues.setOnClickListener(v -> addToPlan(btnTues.getText().toString(), addedToTuesday));
-//        btnWed.setOnClickListener(v -> addToPlan(btnWed.getText().toString(), addedToWedensday));
-//        btnThurs.setOnClickListener(v -> addToPlan(btnThurs.getText().toString(), addedToThursday));
-//        btnFri.setOnClickListener(v -> addToPlan(btnFri.getText().toString(), addedToFriday));
         btnSat.setOnClickListener(v -> {
             addToPlan(btnSat.getText().toString(), addedToSaturday);
             dismissDialog();

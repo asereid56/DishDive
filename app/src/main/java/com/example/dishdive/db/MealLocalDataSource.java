@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 
-import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.example.dishdive.model.Meal;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,12 +15,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.reactivestreams.Subscriber;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -137,7 +134,7 @@ public class MealLocalDataSource {
         return user;
     }
 
-    public void syncRealtimeDatabase(String email) {
+    public void syncRealtimeDatabaseFromLocal(String email) {
         DatabaseReference userFavRef = databaseReference.child(email.replace(".", "_")).child("Fav");
         DatabaseReference userPlanRef = databaseReference.child(email.replace(".", "_")).child("Plan");
 
@@ -166,6 +163,88 @@ public class MealLocalDataSource {
                 });
 
 
+    }
+    public void syncLocalDatabaseFromRemote(String email) {
+        if (email == null) {
+            Log.e("TAG", "Email is null. Cannot synchronize database.");
+            return;
+        }
+        DatabaseReference userFavRef = databaseReference.child(email.replace(".", "_")).child("Fav");
+        DatabaseReference userPlanRef = databaseReference.child(email.replace(".", "_")).child("Plan");
+
+        // Retrieve favorite meals from remote database
+        userFavRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Meal> favoriteMeals = new ArrayList<>();
+                for (DataSnapshot mealSnapshot : dataSnapshot.getChildren()) {
+                    Meal meal = mealSnapshot.getValue(Meal.class);
+                    if (meal != null) {
+                        favoriteMeals.add(meal);
+                    }
+                }
+                // Insert favorite meals into local database
+                insertFavoriteMealsToLocalDB(favoriteMeals);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("TAG", "Error retrieving favorite meals from Realtime Database: " + databaseError.getMessage());
+            }
+        });
+
+        // Retrieve plan meals from remote database
+        userPlanRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Meal> planMeals = new ArrayList<>();
+                for (DataSnapshot daySnapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot mealSnapshot : daySnapshot.getChildren()) {
+                        Meal meal = mealSnapshot.getValue(Meal.class);
+                        if (meal != null) {
+                            planMeals.add(meal);
+                        }
+                    }
+                }
+                // Insert plan meals into local database
+                insertPlanMealsToLocalDB(planMeals);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("TAG", "Error retrieving plan meals from Realtime Database: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void insertFavoriteMealsToLocalDB(List<Meal> favoriteMeals) {
+        Flowable.fromCallable(() -> {
+                    for (Meal meal : favoriteMeals) {
+                        mealDao.insertMeal(meal);
+                    }
+                    return true;
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    Log.d("TAG", "Favorite meals inserted into local database successfully");
+                }, throwable -> {
+                    Log.e("TAG", "Error inserting favorite meals into local database: " + throwable.getMessage());
+                });
+    }
+
+    private void insertPlanMealsToLocalDB(List<Meal> planMeals) {
+        Flowable.fromCallable(() -> {
+                    for (Meal meal : planMeals) {
+                        mealDao.insertMeal(meal);
+                    }
+                    return true;
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(result -> {
+                    Log.d("TAG", "Plan meals inserted into local database successfully");
+                }, throwable -> {
+                    Log.e("TAG", "Error inserting plan meals into local database: " + throwable.getMessage());
+                });
     }
 
 }
