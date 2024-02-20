@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dishdive.R;
 import com.example.dishdive.db.MealLocalDataSource;
@@ -87,6 +88,7 @@ public class ProfileFragment extends Fragment {
                 user = auth.getCurrentUser();
                 String email = user.getEmail();
                 profilePresenter.syncAllMealFromLocal(email);
+                Toast.makeText(getContext(), "Done", Toast.LENGTH_SHORT).show();
             }
         });
     }

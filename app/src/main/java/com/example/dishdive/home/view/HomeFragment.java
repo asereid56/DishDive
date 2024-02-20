@@ -51,6 +51,7 @@ public class HomeFragment extends Fragment implements HomeView {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        mAuth = FirebaseAuth.getInstance();
         return view;
     }
 
@@ -63,7 +64,7 @@ public class HomeFragment extends Fragment implements HomeView {
         randomDailyImage = view.findViewById(R.id.dailyMeal);
         recyclerView = view.findViewById(R.id.popularRecycleView);
         btnSearch = view.findViewById(R.id.btnSearch);
-        mAuth = FirebaseAuth.getInstance();
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if(currentUser!= null){

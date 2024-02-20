@@ -101,6 +101,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         presenter.getMealDetails(mealID);
 
         youtubeImg.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 toggleVideoPlayback(meal.getStrYoutube());
@@ -143,6 +144,7 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         mealName = args.getMealName();
         mealID = args.getMealID();
         mealThumb = args.getMealThumb();
+
     }
 
     private void initUI(View view) {
@@ -193,12 +195,13 @@ public class DetailsMealFragment extends Fragment implements MealDetailsView {
         category.setText("Category: " + meal.getStrCategory());
         area.setText("Area: " + meal.getStrArea());
         videoLink = meal.getStrYoutube().toString();
+        playVideo(videoLink);
+
     }
 
     private void toggleVideoPlayback(String url) {
         if (!isVideoAppear) {
             youTubePlayerView.setVisibility(View.VISIBLE);
-            playVideo(url);
             isVideoAppear = true;
         } else {
             youTubePlayerView.setVisibility(View.GONE);
