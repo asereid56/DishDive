@@ -6,7 +6,6 @@
         <item name="colorPrimaryVariant">@color/accent</item>
         <item name="colorOnPrimary">@color/secondary</item>
         <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:navigationBarColor">#F52C56</item>
 
     </style>
 

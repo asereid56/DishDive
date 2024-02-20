@@ -15,7 +15,7 @@
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="54dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/regular"
         android:text="@string/search"
         android:textColor="#E91E63"
@@ -26,11 +26,11 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card1"
-        android:layout_width="356dp"
+        android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
         app:cardCornerRadius="15dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -58,14 +58,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
+        app:layout_constraintGuide_end="8dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp"
+        app:layout_constraintGuide_begin="8dp"
         app:singleSelection="true" />
 
 
@@ -82,18 +82,21 @@
         <com.google.android.material.chip.Chip
             android:id="@+id/chipCountry"
             style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
+            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/accent"
             android:text="@string/country"
             android:textColor="@color/secondary"
             app:layout_constraintEnd_toStartOf="@+id/chipIngrediant"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipIngrediant"
             style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
+            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/accent"
             android:text="@string/ingredient"
@@ -104,7 +107,8 @@
         <com.google.android.material.chip.Chip
             android:id="@+id/chipCategory"
             style="@style/Widget.MaterialComponents.Chip.Choice"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
+            android:textAlignment="center"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/accent"
             android:text="@string/category"

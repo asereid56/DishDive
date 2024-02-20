@@ -25,7 +25,7 @@
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="54dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/regular"
         android:text="@string/choose_your_meal"
         android:textColor="#E91E63"
